@@ -27,6 +27,7 @@ type StyleProps = {
 
 const useStyles = createUseStyles({
   animationContainer: {
+    textAlign: "center",
     width: "70%",
     display: "block",
     marginBottom: 40,
@@ -43,6 +44,7 @@ const useStyles = createUseStyles({
     },
   }),
   playerContainer: {
+    marginTop: 20,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
