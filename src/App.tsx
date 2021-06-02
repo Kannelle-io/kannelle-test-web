@@ -1,7 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./styles.css";
-import LottiePlayer from "./LottiePlayer";
 import { createUseStyles } from "react-jss";
 import FontsLoader from "./FontsLoader";
 import AnimationPlayer from "./AnimationPlayer";
