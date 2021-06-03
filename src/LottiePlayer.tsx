@@ -97,7 +97,6 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     );
 
     useEffect(() => {
-      // console.log('init')
       animRef.current = lottie.loadAnimation({
         animationData,
         path,

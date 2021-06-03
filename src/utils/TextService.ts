@@ -9,8 +9,10 @@ class TextService {
       case TEXT_LENGTHS.SMALL:
         return TextService.getShortDefaultTextsByAnimation(animationName);
       case TEXT_LENGTHS.LARGE:
-      default:
         return TextService.getLongDefaultTextsByAnimation(animationName);
+      case TEXT_LENGTHS.MEDIUM:
+      default:
+        return TextService.getMediumDefaultTextsByAnimation(animationName);
     }
   };
 
@@ -89,6 +91,136 @@ class TextService {
 
       case ANIMATION_KEYS.VELIB:
         return ["Sugar", "No sugar"];
+    }
+  };
+
+  static getMediumDefaultTextsByAnimation = (animationName: string) => {
+    switch (animationName) {
+      case ANIMATION_KEYS.AUSTIN:
+        return [
+          "Main actors in the cinema",
+          "Number of people who are watching movies",
+          "+23%",
+          "Number of people who listen to the radio",
+          "-63%",
+        ];
+
+      case ANIMATION_KEYS.AVENTI:
+        return ["With milk", "Without milk"];
+
+      case ANIMATION_KEYS.BIRD:
+        return ["Hey, what's", "your job?"];
+
+      case ANIMATION_KEYS.BUTTERFLY:
+        return ["5", "REALLY EXCITING MOTIVATING CONDITIONS OF WORK"];
+
+      case ANIMATION_KEYS.CITROEN:
+        return [
+          "Coffee break",
+          "with",
+          "Emilie Coudrat",
+          "Startups Program Manager @ Naver",
+        ];
+
+      case ANIMATION_KEYS.DELOREAN:
+        return [
+          "Main actors in the cinema",
+          "Number of people who are watching movies",
+          "+23%",
+          "Number of people who listen to the radio",
+          "-63%",
+        ];
+
+      case ANIMATION_KEYS.DODGE:
+        return [
+          "$28Mds",
+          "is a lot of money",
+          "iSwissWeb, between 2019 and 2020",
+        ];
+
+      case ANIMATION_KEYS.FORD:
+        return ["Who", "are you?"];
+
+      case ANIMATION_KEYS.FOX:
+        return ["5 REASONS WHY YOU SHOULD JOIN US"];
+
+      case ANIMATION_KEYS.LIME:
+        return [
+          "Southern Europe",
+          "Confessional",
+          "Paris, France",
+          "26th & 27th September 2018",
+        ];
+
+      case ANIMATION_KEYS.LINCOLN:
+        return [
+          "80%",
+          "of people are really happy",
+          "South-east of Paris, between 2019 and 2020",
+        ];
+
+      case ANIMATION_KEYS.MAZDA:
+        return ["My hobbies: fashion & digital marketing"];
+
+      case ANIMATION_KEYS.MCLAREN:
+        return [
+          "$28Mds",
+          "is a lot of money",
+          "iSwissWeb, between 2019 and 2020",
+        ];
+
+      case ANIMATION_KEYS.MUSTANG:
+        return ["My main mission: improve e-commerce revenue"];
+
+      case ANIMATION_KEYS.NISSAN:
+        return ["Sophie Trippé", "E-Marketing Manager @ Zara France"];
+
+      case ANIMATION_KEYS.OWL:
+        return [
+          "CHECK OUR SUPER JOB OFFERS ON OUR WEBSITE",
+          "WWW.KANNELLE.IO/ JOBS-FOR-YOU",
+        ];
+
+      case ANIMATION_KEYS.PEUGEOT:
+        return ["With milk", "Without milk"];
+
+      case ANIMATION_KEYS.PLANE:
+        return [
+          "In the shoes",
+          "of...",
+          "Ludovic Fauvet",
+          "Board member of VideoLAN",
+        ];
+
+      case ANIMATION_KEYS.RAM:
+        return ["2020", "Without milk"];
+
+      case ANIMATION_KEYS.ROUSH:
+        return ["With milk", "Without milk"];
+
+      case ANIMATION_KEYS.SIMCA:
+        return ["What if you were... a weakness?"];
+
+      case ANIMATION_KEYS.SKATEBOARD:
+        return [
+          "Gossips",
+          "with",
+          "Edouard Loisel",
+          "Video editor at MinuteBuzz",
+        ];
+
+      case ANIMATION_KEYS.TOYOTA:
+        return [
+          "80%",
+          "of people are really happy",
+          "South-east of Paris, between 2019 and 2020",
+        ];
+
+      case ANIMATION_KEYS.VECTOR:
+        return ["2020", "Without milk"];
+
+      case ANIMATION_KEYS.VELIB:
+        return ["With milk", "Without milk"];
     }
   };
 

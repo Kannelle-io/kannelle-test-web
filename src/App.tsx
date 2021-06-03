@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import "./styles.css";
 import { createUseStyles } from "react-jss";
 import FontsLoader from "./FontsLoader";
 import AnimationPlayer from "./AnimationPlayer";
 import "antd/dist/antd.css";
-import { Select, Form, Button } from "antd";
+import { Select, Form, Button, Input } from "antd";
 
 import {
   ANIMATION_FORMATS,
@@ -44,6 +44,9 @@ const useStyles = createUseStyles({
 });
 
 export default function App() {
+  const initToken =
+    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik0wWTVNa0pEUmpoRk9Ea3pOVU5FT1VVNU16bEVRekUzUmpoQk5UTkRSVEpGTURaRU5VWkJNQSJ9.eyJpc3MiOiJodHRwczovL2tubC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhYmU2ZDliOTc1NzQwYmY4MmE3NGQ4IiwiYXVkIjoiaHR0cHM6Ly9kZXYucmVzdC5rYW5uZWxsZS5pby92NCIsImlhdCI6MTYyMjYzNTM5MSwiZXhwIjoxNjIyNzIxNzkxLCJhenAiOiJGbjFVRURnZHB6OFVBck9HRmhnZFZodUJIbTE5MHZ5WCIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOltdfQ.l8_9Fvnh5jMiYDwhfyz7H6jLx1iPSa5Li-jh_wH2Xjm--JiIn1ewKo91colJYLt4O0A-QIZCmy_hpwEfasuTnRhEAZ3o-awaOzSNkDeV8CNSgKal9ruAxdZdI8_aQS71DrHIkm8HtaT45PQkZKPy1B-S0vqLy8F29Pfn6Gyr2s7woXA5cS6IoSLqsKPMoWNTVQqssLPvDQvgOhA6JTiXOu96JmibKlhruJ4scqL-M0hqftzQ7irUACQh-iPl19DvcrM_HHob_lShQB2p5D5agCMOeqL81BvAwomIV0A8IdTlPi1lSFahXs7ax-cSYhgDgjMIr5Dor7MvXCJ-4puIHA";
+  const [token, setToken] = useState<string>(initToken);
   const [selectedTheme, setSelectedTheme] = useState<string>(
     THEME_KEYS.ALGIERS
   );
@@ -60,9 +63,6 @@ export default function App() {
   // charterId = 6784 --> No charter font defined, we use the public fonts
   // charterId = 6857 --> Charter fonts defined and loaded BUT badly rendered
   const charterId = 6857;
-  const token =
-    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik0wWTVNa0pEUmpoRk9Ea3pOVU5FT1VVNU16bEVRekUzUmpoQk5UTkRSVEpGTURaRU5VWkJNQSJ9.eyJpc3MiOiJodHRwczovL2tubC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhYmU2ZDliOTc1NzQwYmY4MmE3NGQ4IiwiYXVkIjoiaHR0cHM6Ly9kZXYucmVzdC5rYW5uZWxsZS5pby92NCIsImlhdCI6MTYyMjYzNTM5MSwiZXhwIjoxNjIyNzIxNzkxLCJhenAiOiJGbjFVRURnZHB6OFVBck9HRmhnZFZodUJIbTE5MHZ5WCIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOltdfQ.l8_9Fvnh5jMiYDwhfyz7H6jLx1iPSa5Li-jh_wH2Xjm--JiIn1ewKo91colJYLt4O0A-QIZCmy_hpwEfasuTnRhEAZ3o-awaOzSNkDeV8CNSgKal9ruAxdZdI8_aQS71DrHIkm8HtaT45PQkZKPy1B-S0vqLy8F29Pfn6Gyr2s7woXA5cS6IoSLqsKPMoWNTVQqssLPvDQvgOhA6JTiXOu96JmibKlhruJ4scqL-M0hqftzQ7irUACQh-iPl19DvcrM_HHob_lShQB2p5D5agCMOeqL81BvAwomIV0A8IdTlPi1lSFahXs7ax-cSYhgDgjMIr5Dor7MvXCJ-4puIHA";
-
   const classes = useStyles();
 
   const layout = {
@@ -71,9 +71,15 @@ export default function App() {
   };
 
   const initialValues = {
+    token: initToken,
     theme: THEME_KEYS.ALGIERS,
     format: ANIMATION_FORMATS.FORMAT_16_9,
     textLength: TEXT_LENGTHS.LARGE,
+  };
+
+  const onTokenChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setToken(value);
   };
 
   const onThemeChange = (value: string) => {
@@ -98,6 +104,10 @@ export default function App() {
         className={classes.form}
         initialValues={initialValues}
       >
+        <Form.Item label="Token (API v4)" name="token">
+          <Input onChange={onTokenChange} />
+        </Form.Item>
+
         <Form.Item label="Theme" name="theme">
           <Select onChange={onThemeChange} value={selectedTheme}>
             {Object.values(THEME_KEYS).map((themeKey: string) => (

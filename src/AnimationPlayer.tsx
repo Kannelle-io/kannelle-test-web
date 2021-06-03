@@ -1,8 +1,8 @@
-import { Alert, Button, message, Modal, Skeleton } from "antd";
+import { Alert, Button, Card, message, Modal, Skeleton } from "antd";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { createUseStyles } from "react-jss";
-import { ANIMATION_KEYS, apiUrl } from "./Constants";
+import { apiUrl } from "./Constants";
 import LottiePlayer from "./LottiePlayer";
 import AnimationService from "./utils/AnimationService";
 import TextService from "./utils/TextService";
@@ -27,7 +27,6 @@ type StyleProps = {
 
 const useStyles = createUseStyles({
   animationContainer: {
-    textAlign: "center",
     width: "70%",
     display: "block",
     marginBottom: 40,
@@ -63,6 +62,20 @@ const useStyles = createUseStyles({
   copyToClipboardButton: {
     marginBottom: 20,
   },
+  cardTitle: {
+    display: "flex",
+    alignItems: "center",
+  },
+  positionDescriptor: {
+    marginLeft: 15,
+    padding: ".2em .4em",
+    margin: "0",
+    fontSize: "60%",
+    backgroundColor: "rgba(27,31,35,.05)",
+    borderRadius: "3px",
+    fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
+    width: "fit-content",
+  },
 });
 
 const AnimationPlayer = ({
@@ -79,6 +92,8 @@ const AnimationPlayer = ({
   const [error, setError] = useState<string>();
   const [playerSize, setPlayerSize] = useState<any>();
   const [animationTexts, setAnimationTexts] = useState<string[]>();
+  const [position, setPosition] =
+    useState<{ code: string; x?: number; y?: number }>();
 
   const playerRef = useRef<any>();
 
@@ -91,7 +106,10 @@ const AnimationPlayer = ({
   }, [animation, textLength]);
 
   useEffect(() => {
-    console.log("in effect");
+    setPosition(AnimationService.getDefaultPosition(theme, animation));
+  }, [animation, theme]);
+
+  useEffect(() => {
     if (playerRef.current) {
       const playerInitialSize = {
         width: playerRef.current.clientWidth,
@@ -102,22 +120,30 @@ const AnimationPlayer = ({
         playerInitialSize,
         format
       );
-      console.log("newPlayerSize", newPlayerSize);
       setPlayerSize(newPlayerSize);
     }
   }, [lottieJson, format, playerRef]);
 
   useEffect(() => {
+    if (
+      !(
+        animation &&
+        theme &&
+        format &&
+        position &&
+        animationTexts &&
+        animationTexts.length > 0
+      )
+    ) {
+      return;
+    }
+
     const params = {
       animationName: animation,
       theme,
       format,
       animationTexts: animationTexts,
-      position: {
-        code: "FULLSCREEN",
-        x: 0,
-        y: 0,
-      },
+      position,
     };
 
     setIsLoading(true);
@@ -134,11 +160,16 @@ const AnimationPlayer = ({
       })
       .then((response) => {
         setLottieJson(response.data);
-        if (animation === ANIMATION_KEYS.FORD) {
-          console.log("lottie", response.data);
-        }
       })
       .catch((e) => {
+        const status = e.response.status;
+        if (status === 401) {
+          const errorMsg = `Error: the token might be expired`;
+          setError(errorMsg);
+          console.error(errorMsg, e);
+          return;
+        }
+
         const errorMsg = `Error with the following params: ${JSON.stringify(
           params,
           null,
@@ -148,10 +179,10 @@ const AnimationPlayer = ({
           Error: ${e.message}
         `;
         setError(errorMsg);
-        console.error(`Error with the following params:`, params);
+        console.error(`Error with the following params:`, params, e);
       })
       .finally(() => setIsLoading(false));
-  }, [charterId, token, theme, animation, format, animationTexts]);
+  }, [charterId, token, theme, animation, format, animationTexts, position]);
 
   const onOpenModal = () => {
     setIsModalVisible(true);
@@ -173,32 +204,8 @@ const AnimationPlayer = ({
     );
   };
 
-  return (
-    <div className={classes.animationContainer}>
-      {animation}
-      <Button
-        type={"primary"}
-        danger={!!error}
-        onClick={onOpenModal}
-        icon={<CodeOutlined />}
-        className={classes.lottieAnimationButton}
-        loading={isLoading}
-        disabled={isLoading}
-      >
-        Lottie code
-      </Button>
-      {isLoading && <Skeleton active />}
-      {error && !isLoading && renderError()}
-      {lottieJson && !error && !isLoading && (
-        <div ref={playerRef} className={classes.playerContainer}>
-          <LottiePlayer
-            animationData={lottieJson}
-            play
-            loop
-            className={classes.lottiePlayer}
-          />
-        </div>
-      )}
+  const renderLottieCodeModal = () => {
+    return (
       <Modal
         title={animation}
         visible={isModalVisible}
@@ -226,7 +233,58 @@ const AnimationPlayer = ({
           {JSON.stringify(lottieJson, null, 2)}
         </pre>
       </Modal>
-    </div>
+    );
+  };
+
+  const renderAnimationCardTitle = () => {
+    return (
+      <div className={classes.cardTitle}>
+        {animation}
+        {position && (
+          <span className={classes.positionDescriptor}>
+            {`(position = { code: ${position.code}, x: ${position.x}, y: ${position.y} })`}
+          </span>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <div className={classes.animationContainer}>
+        <Card
+          title={renderAnimationCardTitle()}
+          extra={
+            <Button
+              type={"primary"}
+              danger={!!error}
+              onClick={onOpenModal}
+              icon={<CodeOutlined />}
+              className={classes.lottieAnimationButton}
+              loading={isLoading}
+              disabled={isLoading}
+            >
+              Lottie code
+            </Button>
+          }
+        >
+          {isLoading && <Skeleton active />}
+          {error && !isLoading && renderError()}
+          {lottieJson && !error && !isLoading && (
+            <div ref={playerRef} className={classes.playerContainer}>
+              <LottiePlayer
+                animationData={lottieJson}
+                play
+                loop
+                className={classes.lottiePlayer}
+              />
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {renderLottieCodeModal()}
+    </>
   );
 };
 

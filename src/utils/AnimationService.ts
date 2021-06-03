@@ -1,4 +1,4 @@
-import { ANIMATION_FORMATS } from "./../Constants";
+import { ANIMATION_FORMATS, ANIMATION_KEYS, THEME_KEYS } from "./../Constants";
 
 class AnimationService {
   static getAnimationPlayerSize = (
@@ -55,6 +55,35 @@ class AnimationService {
       case ANIMATION_FORMATS.FORMAT_16_9:
       default:
         return 1080;
+    }
+  };
+
+  // Helpers
+  static getDefaultPosition = (theme: string, animation: string) => {
+    // Special case for BERLIN-NISSAN: animation is like BOTTOMCENTER
+    if (theme === THEME_KEYS.BERLIN && animation === ANIMATION_KEYS.NISSAN) {
+      return {
+        code: "BOTTOMRIGHT",
+        x: 0,
+        y: 0,
+      };
+    }
+
+    switch (animation) {
+      case ANIMATION_KEYS.NISSAN:
+      case ANIMATION_KEYS.MUSTANG:
+      case ANIMATION_KEYS.MAZDA:
+        return {
+          code: "BOTTOMRIGHT",
+          x: 50,
+          y: 50,
+        };
+      default:
+        return {
+          code: "FULLSCREEN",
+          x: undefined,
+          y: undefined,
+        };
     }
   };
 }
