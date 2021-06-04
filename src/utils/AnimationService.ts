@@ -1,14 +1,21 @@
+import {
+  AnimationPosition,
+  AnimationPositionStyle,
+  Size,
+} from "./../types/AnimationType";
 import { ANIMATION_FORMATS, ANIMATION_KEYS, THEME_KEYS } from "./../Constants";
 import Sample16_9 from "../resources/videos/sample-16_9.mp4";
 import Sample9_16 from "../resources/videos/sample-9_16.mp4";
 import Sample1_1 from "../resources/videos/sample-1_1.mp4";
 
 class AnimationService {
+  // Compute the size of the animation player depending on the animation format,
+  // the actual Lottie animation size, and the initial size of the container player (scale it)
   static getAnimationPlayerSize = (
     lottieObject: any,
-    playerInitialSize: { width: number; height: number },
+    playerInitialSize: Size,
     animationFormat: string
-  ) => {
+  ): Size | undefined => {
     const animationSize =
       AnimationService.getAnimationSizeFromLottieFile(lottieObject);
 
@@ -33,11 +40,13 @@ class AnimationService {
     };
   };
 
-  static getAnimationSizeFromLottieFile = (lottieObject: any) => {
+  // Read the animation dimensions from the JSON Lottie file
+  static getAnimationSizeFromLottieFile = (lottieObject: any): Size => {
     return { width: lottieObject.w, height: lottieObject.h };
   };
 
-  static getReferenceWidthByFormat = (format: string) => {
+  // Get the reference width for each format
+  static getReferenceWidthByFormat = (format: string): number => {
     switch (format) {
       case ANIMATION_FORMATS.FORMAT_1_1:
         return 1440;
@@ -49,7 +58,8 @@ class AnimationService {
     }
   };
 
-  static getReferenceHeightByFormat = (format: string) => {
+  // Get the reference height for each format
+  static getReferenceHeightByFormat = (format: string): number => {
     switch (format) {
       case ANIMATION_FORMATS.FORMAT_1_1:
         return 1440;
@@ -61,10 +71,13 @@ class AnimationService {
     }
   };
 
+  // Depending on the format and the size of the player container, determine the
+  // actual size of the scene player to display
+  // (ex.: 9:16 rectangle fitting into the 16:9 black parent container)
   static getVideoPlayerSizeByFormat = (
     format: string,
-    playerTotalSize: { width: number; height: number }
-  ) => {
+    playerTotalSize: Size
+  ): Size => {
     return {
       height: playerTotalSize.height,
       width:
@@ -72,7 +85,50 @@ class AnimationService {
     };
   };
 
-  static getFormatAspectRatio = (format: string) => {
+  // Compute the animation position style (scale it) depending on the code and the x/y
+  // (which are related to the project reference dimensions)
+  static getAnimationPositionStyle = (
+    animationFormat: string,
+    position: AnimationPosition,
+    playerTotalSize: Size
+  ): AnimationPositionStyle => {
+    const projectReferenceWidth =
+      AnimationService.getReferenceWidthByFormat(animationFormat);
+    const projectReferenceHeight =
+      AnimationService.getReferenceHeightByFormat(animationFormat);
+    const newX = position.x
+      ? (position.x * playerTotalSize.width) / projectReferenceWidth
+      : 0;
+    const newY = position.y
+      ? (position.y * playerTotalSize.height) / projectReferenceHeight
+      : 0;
+
+    switch (position.code) {
+      case "BOTTOMLEFT": {
+        return {
+          left: newX,
+          bottom: newY,
+        };
+      }
+      case "BOTTOMRIGHT": {
+        return {
+          right: newX,
+          bottom: newY,
+        };
+      }
+      case "FULLSCREEN":
+      default:
+        return {
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        };
+    }
+  };
+
+  // Get the aspect ratio as a number
+  static getFormatAspectRatio = (format: string): number => {
     switch (format) {
       case ANIMATION_FORMATS.FORMAT_9_16:
         return 9 / 16;
@@ -84,10 +140,7 @@ class AnimationService {
     }
   };
 
-  static isLowerThirdByPosition = (positionCode: string) => {
-    return positionCode !== "FULLSCREEN";
-  };
-
+  // Get the list of every Slide animation (no associated video nor image)
   static getSlideAnimations = (): string[] => {
     return [
       ANIMATION_KEYS.BIRD,
@@ -104,12 +157,21 @@ class AnimationService {
     ];
   };
 
-  static isSlideAnimation = (animation: string) => {
+  // Check if a given animation is a Slide or not
+  static isSlideAnimation = (animation: string): boolean => {
     return AnimationService.getSlideAnimations().includes(animation);
   };
 
-  // Helpers
-  static getDefaultPosition = (theme: string, animation: string) => {
+  /**
+   *
+   * HELPERS (for Kannelle-Test)
+   *
+   */
+  // Get the default postion for each animation
+  static getDefaultPosition = (
+    theme: string,
+    animation: string
+  ): AnimationPosition => {
     // Special case for BERLIN-NISSAN: animation is like BOTTOMCENTER
     if (theme === THEME_KEYS.BERLIN && animation === ANIMATION_KEYS.NISSAN) {
       return {
@@ -137,7 +199,8 @@ class AnimationService {
     }
   };
 
-  static getSampleVideoByFormat = (format: string) => {
+  // Get the path to the sample video for Recordable animations
+  static getSampleVideoByFormat = (format: string): string => {
     switch (format) {
       case ANIMATION_FORMATS.FORMAT_9_16:
         return Sample9_16;

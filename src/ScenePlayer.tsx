@@ -1,19 +1,14 @@
-import React, {
-  FunctionComponent,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { createUseStyles } from "react-jss";
 import SceneVideoPlayer from "./SceneVideoPlayer";
+import { AnimationPosition } from "./types/AnimationType";
 import AnimationService from "./utils/AnimationService";
-import useWindowSize from "./hooks/useWindowSize";
 
 type Props = {
   animation: string;
   lottieAnimation: string;
   format: string;
+  animationPosition: AnimationPosition;
 };
 
 const useStyles = createUseStyles({
@@ -37,17 +32,19 @@ const ScenePlayer: FunctionComponent<Props> = ({
   animation,
   lottieAnimation,
   format,
+  animationPosition,
 }: Props) => {
   const classes = useStyles();
   const [isSlide, setIsSlide] = useState(false);
   // For the demo
   const [sampleVideo, setSampleVideo] = useState<string>();
 
+  // Check if the animation is a Slide
   useEffect(() => {
     setIsSlide(AnimationService.isSlideAnimation(animation));
   }, [animation]);
 
-  // For the demo
+  // For the demo: select a sample video of the right format if the video is a Slide
   useEffect(() => {
     if (isSlide) {
       setSampleVideo(undefined);
@@ -65,6 +62,7 @@ const ScenePlayer: FunctionComponent<Props> = ({
           videoUrl={sampleVideo}
           lottieAnimation={lottieAnimation}
           format={format}
+          animationPosition={animationPosition}
         />
       </div>
     </div>

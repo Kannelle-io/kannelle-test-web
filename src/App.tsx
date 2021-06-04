@@ -56,8 +56,6 @@ export default function App() {
     TEXT_LENGTHS.MEDIUM
   );
 
-  const [form] = Form.useForm();
-
   // Try with:
   // charterId = 6784 --> No charter font defined, we use the public fonts
   // charterId = 6857 --> Charter fonts defined and loaded BUT badly rendered
@@ -93,10 +91,8 @@ export default function App() {
     setSelectedTextLength(value);
   };
 
-  return (
-    <div className="App">
-      <FontsLoader charterId={charterId} token={token} />
-
+  const renderForm = () => {
+    return (
       <Form
         {...layout}
         name="basic"
@@ -137,15 +133,23 @@ export default function App() {
           </Select>
         </Form.Item>
       </Form>
+    );
+  };
+
+  return (
+    <div className="App">
+      <FontsLoader charterId={charterId} token={token} />
+
+      {renderForm()}
 
       <div className={classes.animationsContainer}>
         {Object.values(ANIMATION_KEYS).map((animationKey: string) => {
-          if (
-            animationKey !== ANIMATION_KEYS.MAZDA &&
-            animationKey !== ANIMATION_KEYS.FORD
-          ) {
-            return;
-          }
+          // if (
+          //   animationKey !== ANIMATION_KEYS.MAZDA &&
+          //   animationKey !== ANIMATION_KEYS.FORD
+          // ) {
+          //   return;
+          // }
 
           return (
             <ScenePlayerCard
@@ -159,15 +163,6 @@ export default function App() {
             />
           );
         })}
-        {/* <ScenePlayerCard
-          charterId={charterId}
-          token={token}
-          theme={selectedTheme}
-          animation="FORD"
-          format={selectedFormat}
-          animationTexts={animationTexts}
-          // key={animationKey}
-        /> */}
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import { CodeOutlined, CopyOutlined } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
 import ScenePlayer from "./ScenePlayer";
 import SceneVideoPlayer from "./SceneVideoPlayer";
+import type { AnimationPosition } from "./types/AnimationType";
 
 type Props = {
   charterId: number;
@@ -71,21 +72,25 @@ const ScenePlayerCard = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [error, setError] = useState<string>();
   const [animationTexts, setAnimationTexts] = useState<string[]>();
-  const [position, setPosition] =
-    useState<{ code: string; x?: number; y?: number }>();
+  const [position, setPosition] = useState<AnimationPosition>({
+    code: "FULLSCREEN",
+  });
 
   const classes = useStyles();
 
+  // Default animation texts for each animation depending on the selected textLength
   useEffect(() => {
     setAnimationTexts(
       TextService.getDefaultTextsByAnimationAndTextLength(animation, textLength)
     );
   }, [animation, textLength]);
 
+  // Default animation positions
   useEffect(() => {
     setPosition(AnimationService.getDefaultPosition(theme, animation));
   }, [animation, theme]);
 
+  // Fetch the actual Lottie file depending on the animation params
   useEffect(() => {
     if (
       !(
@@ -125,6 +130,7 @@ const ScenePlayerCard = ({
       })
       .catch((e) => {
         const status = e.response.status;
+        // Expired token
         if (status === 401) {
           const errorMsg = `Error: the token might be expired`;
           setError(errorMsg);
@@ -132,6 +138,7 @@ const ScenePlayerCard = ({
           return;
         }
 
+        // General error case
         const errorMsg = `Error with the following params: ${JSON.stringify(
           params,
           null,
@@ -154,6 +161,7 @@ const ScenePlayerCard = ({
     setIsModalVisible(false);
   };
 
+  // Error panel
   const renderError = () => {
     return (
       <Alert
@@ -166,6 +174,7 @@ const ScenePlayerCard = ({
     );
   };
 
+  // Modal to display the Lottie JSON code and copy it to clipboard
   const renderLottieCodeModal = () => {
     return (
       <Modal
@@ -198,6 +207,7 @@ const ScenePlayerCard = ({
     );
   };
 
+  // Card title
   const renderAnimationCardTitle = () => {
     return (
       <div className={classes.cardTitle}>
@@ -211,6 +221,7 @@ const ScenePlayerCard = ({
     );
   };
 
+  // Button to open the Lottie modal
   const renderOpenLottieModalButton = () => {
     return (
       <Button
@@ -242,6 +253,7 @@ const ScenePlayerCard = ({
               animation={animation}
               lottieAnimation={lottieJson}
               format={format}
+              animationPosition={position}
             />
           )}
         </Card>

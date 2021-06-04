@@ -3,6 +3,11 @@ import { createUseStyles } from "react-jss";
 import ReactPlayer from "react-player";
 import useWindowSize from "./hooks/useWindowSize";
 import LottiePlayer from "./LottiePlayer";
+import {
+  AnimationPosition,
+  AnimationPositionStyle,
+  Size,
+} from "./types/AnimationType";
 import AnimationService from "./utils/AnimationService";
 
 type Props = {
@@ -10,21 +15,13 @@ type Props = {
   videoUrl?: string;
   lottieAnimation: any;
   format: string;
-  // lottiePlayerSize?: {
-  //   height: number;
-  //   width: number;
-  // };
+  animationPosition: AnimationPosition;
 };
 
 type StyleProps = {
-  sceneVideoPlayerSize?: {
-    height: number;
-    width: number;
-  };
-  lottiePlayerSize?: {
-    height: number;
-    width: number;
-  };
+  sceneVideoPlayerSize?: Size;
+  lottiePlayerSize?: Size;
+  animationPositionStyle?: AnimationPositionStyle;
 };
 
 const useStyles = createUseStyles({
@@ -45,19 +42,24 @@ const useStyles = createUseStyles({
     height: "100%",
   },
   lottiePlayerContainer: {},
-  lottiePlayer: ({ lottiePlayerSize }: StyleProps) => ({
-    maxHeight: "100%",
-    maxWidth: "100%",
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    height: lottiePlayerSize?.height ?? "100%",
-    width: lottiePlayerSize?.width ?? "100%",
-    "& > svg": {
+  lottiePlayer: ({ lottiePlayerSize, animationPositionStyle }: StyleProps) => {
+    const { top, right, bottom, left } = animationPositionStyle || {};
+    return {
       maxHeight: "100%",
-      display: "block",
-    },
-  }),
+      maxWidth: "100%",
+      position: "absolute",
+      ...(top !== undefined && { top }),
+      ...(right !== undefined && { right }),
+      ...(bottom !== undefined && { bottom }),
+      ...(left !== undefined && { left }),
+      height: lottiePlayerSize?.height ?? "100%",
+      width: lottiePlayerSize?.width ?? "100%",
+      "& > svg": {
+        maxHeight: "100%",
+        display: "block",
+      },
+    };
+  },
 });
 
 const SceneVideoPlayer: FunctionComponent<Props> = ({
@@ -65,41 +67,62 @@ const SceneVideoPlayer: FunctionComponent<Props> = ({
   videoUrl,
   lottieAnimation,
   format,
-}: // lottiePlayerSize,
-Props) => {
-  const [sceneVideoPlayerSize, setSceneVideoPlayerSize] =
-    useState<{ width: number; height: number }>();
-  const [lottiePlayerSize, setLottiePlayerSize] =
-    useState<{ width: number; height: number }>();
+  animationPosition,
+}: Props) => {
+  const [sceneVideoPlayerSize, setSceneVideoPlayerSize] = useState<Size>();
+  const [lottiePlayerSize, setLottiePlayerSize] = useState<Size>();
+  const [animationPositionStyle, setAnimationPositionStyle] =
+    useState<AnimationPositionStyle>();
 
-  const classes = useStyles({ lottiePlayerSize, sceneVideoPlayerSize });
+  const classes = useStyles({
+    lottiePlayerSize,
+    sceneVideoPlayerSize,
+    animationPositionStyle,
+  });
   const sceneVideoPlayerRef = useRef<HTMLDivElement>(null);
   const videoPlayerRef = useRef<ReactPlayer>(null);
   const windowSize = useWindowSize();
 
-  // From the rendered SceneVideoPlayer, calculate the new LottiePlayer size
+  // From the rendered SceneVideoPlayer, calculate the scene component sizes
   useEffect(() => {
     if (sceneVideoPlayerRef.current) {
+      // Get the rendered total size of the sceneVideoPlayerRef (16:9 black rectangle)
       const boundingRect = sceneVideoPlayerRef.current.getBoundingClientRect();
       const playerInitialSize = {
         width: boundingRect.width,
         height: boundingRect.height,
       };
 
+      // Compute the size of the sceneVideoPlayer (into the right format, fitting into the 16:9 black rectangle)
       const videoPlayerSize = AnimationService.getVideoPlayerSizeByFormat(
         format,
         playerInitialSize
       );
       setSceneVideoPlayerSize(videoPlayerSize);
 
+      // Compute the animation size (scale it)
       const newLottiePlayerSize = AnimationService.getAnimationPlayerSize(
         lottieAnimation,
         videoPlayerSize,
         format
       );
       setLottiePlayerSize(newLottiePlayerSize);
+
+      // Compute the animation position style depending on the configured animation position
+      const positionStyle = AnimationService.getAnimationPositionStyle(
+        format,
+        animationPosition,
+        videoPlayerSize
+      );
+      setAnimationPositionStyle(positionStyle);
     }
-  }, [lottieAnimation, format, sceneVideoPlayerRef, windowSize]);
+  }, [
+    lottieAnimation,
+    format,
+    animationPosition,
+    sceneVideoPlayerRef,
+    windowSize,
+  ]);
 
   return (
     <div ref={sceneVideoPlayerRef} className={classes.sceneVideoPlayerWrapper}>
