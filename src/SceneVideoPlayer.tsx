@@ -37,7 +37,6 @@ const useStyles = createUseStyles({
   videoContainer: {
     height: '100%',
   },
-  lottiePlayerContainer: {},
   lottiePlayer: ({ lottiePlayerSize, animationPositionStyle }: StyleProps) => {
     const { top, right, bottom, left } = animationPositionStyle || {};
     return {
@@ -111,7 +110,7 @@ const SceneVideoPlayer: FunctionComponent<Props> = ({
           </div>
         )}
 
-        <div className={classes.lottiePlayerContainer}>
+        <div>
           <LottiePlayer animationData={lottieAnimation} play loop className={classes.lottiePlayer} />
         </div>
       </div>
