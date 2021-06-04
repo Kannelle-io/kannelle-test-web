@@ -1,12 +1,8 @@
-import {
-  AnimationPosition,
-  AnimationPositionStyle,
-  Size,
-} from "./../types/AnimationType";
-import { ANIMATION_FORMATS, ANIMATION_KEYS, THEME_KEYS } from "./../Constants";
-import Sample16_9 from "../resources/videos/sample-16_9.mp4";
-import Sample9_16 from "../resources/videos/sample-9_16.mp4";
-import Sample1_1 from "../resources/videos/sample-1_1.mp4";
+import { AnimationPosition, AnimationPositionStyle, Size } from './../types/AnimationType';
+import { ANIMATION_FORMATS, ANIMATION_KEYS, THEME_KEYS } from './../Constants';
+import Sample16_9 from '../resources/videos/sample-16_9.mp4';
+import Sample9_16 from '../resources/videos/sample-9_16.mp4';
+import Sample1_1 from '../resources/videos/sample-1_1.mp4';
 
 class AnimationService {
   // Compute the size of the animation player depending on the animation format,
@@ -16,23 +12,17 @@ class AnimationService {
     playerInitialSize: Size,
     animationFormat: string
   ): Size | undefined => {
-    const animationSize =
-      AnimationService.getAnimationSizeFromLottieFile(lottieObject);
+    const animationSize = AnimationService.getAnimationSizeFromLottieFile(lottieObject);
 
     if (playerInitialSize.height <= 0 || playerInitialSize.width <= 0) {
       return;
     }
 
-    const projectReferenceWidth =
-      AnimationService.getReferenceWidthByFormat(animationFormat);
-    const projectReferenceHeight =
-      AnimationService.getReferenceHeightByFormat(animationFormat);
+    const projectReferenceWidth = AnimationService.getReferenceWidthByFormat(animationFormat);
+    const projectReferenceHeight = AnimationService.getReferenceHeightByFormat(animationFormat);
 
-    const resizedAnimationHeight =
-      (playerInitialSize.height * animationSize.height) /
-      projectReferenceHeight;
-    const resizedAnimationWidth =
-      (playerInitialSize.width * animationSize.width) / projectReferenceWidth;
+    const resizedAnimationHeight = (playerInitialSize.height * animationSize.height) / projectReferenceHeight;
+    const resizedAnimationWidth = (playerInitialSize.width * animationSize.width) / projectReferenceWidth;
 
     return {
       width: resizedAnimationWidth,
@@ -74,14 +64,10 @@ class AnimationService {
   // Depending on the format and the size of the player container, determine the
   // actual size of the scene player to display
   // (ex.: 9:16 rectangle fitting into the 16:9 black parent container)
-  static getVideoPlayerSizeByFormat = (
-    format: string,
-    playerTotalSize: Size
-  ): Size => {
+  static getVideoPlayerSizeByFormat = (format: string, playerTotalSize: Size): Size => {
     return {
       height: playerTotalSize.height,
-      width:
-        playerTotalSize.height * AnimationService.getFormatAspectRatio(format),
+      width: playerTotalSize.height * AnimationService.getFormatAspectRatio(format),
     };
   };
 
@@ -92,31 +78,25 @@ class AnimationService {
     position: AnimationPosition,
     playerTotalSize: Size
   ): AnimationPositionStyle => {
-    const projectReferenceWidth =
-      AnimationService.getReferenceWidthByFormat(animationFormat);
-    const projectReferenceHeight =
-      AnimationService.getReferenceHeightByFormat(animationFormat);
-    const newX = position.x
-      ? (position.x * playerTotalSize.width) / projectReferenceWidth
-      : 0;
-    const newY = position.y
-      ? (position.y * playerTotalSize.height) / projectReferenceHeight
-      : 0;
+    const projectReferenceWidth = AnimationService.getReferenceWidthByFormat(animationFormat);
+    const projectReferenceHeight = AnimationService.getReferenceHeightByFormat(animationFormat);
+    const newX = position.x ? (position.x * playerTotalSize.width) / projectReferenceWidth : 0;
+    const newY = position.y ? (position.y * playerTotalSize.height) / projectReferenceHeight : 0;
 
     switch (position.code) {
-      case "BOTTOMLEFT": {
+      case 'BOTTOMLEFT': {
         return {
           left: newX,
           bottom: newY,
         };
       }
-      case "BOTTOMRIGHT": {
+      case 'BOTTOMRIGHT': {
         return {
           right: newX,
           bottom: newY,
         };
       }
-      case "FULLSCREEN":
+      case 'FULLSCREEN':
       default:
         return {
           top: 0,
@@ -168,14 +148,11 @@ class AnimationService {
    *
    */
   // Get the default postion for each animation
-  static getDefaultPosition = (
-    theme: string,
-    animation: string
-  ): AnimationPosition => {
+  static getDefaultPosition = (theme: string, animation: string): AnimationPosition => {
     // Special case for BERLIN-NISSAN: animation is like BOTTOMCENTER
     if (theme === THEME_KEYS.BERLIN && animation === ANIMATION_KEYS.NISSAN) {
       return {
-        code: "BOTTOMRIGHT",
+        code: 'BOTTOMRIGHT',
         x: 0,
         y: 0,
       };
@@ -186,13 +163,13 @@ class AnimationService {
       case ANIMATION_KEYS.MUSTANG:
       case ANIMATION_KEYS.MAZDA:
         return {
-          code: "BOTTOMRIGHT",
+          code: 'BOTTOMRIGHT',
           x: 50,
           y: 50,
         };
       default:
         return {
-          code: "FULLSCREEN",
+          code: 'FULLSCREEN',
           x: undefined,
           y: undefined,
         };

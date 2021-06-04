@@ -1,16 +1,16 @@
-import { Alert, Button, Card, message, Modal, Skeleton } from "antd";
-import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import { createUseStyles } from "react-jss";
-import { ANIMATION_FORMATS, apiUrl } from "./Constants";
-import LottiePlayer from "./LottiePlayer";
-import AnimationService from "./utils/AnimationService";
-import TextService from "./utils/TextService";
-import { CodeOutlined, CopyOutlined } from "@ant-design/icons";
-import CopyToClipboard from "react-copy-to-clipboard";
-import ScenePlayer from "./ScenePlayer";
-import SceneVideoPlayer from "./SceneVideoPlayer";
-import type { AnimationPosition } from "./types/AnimationType";
+import { Alert, Button, Card, message, Modal, Skeleton } from 'antd';
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import { createUseStyles } from 'react-jss';
+import { ANIMATION_FORMATS, apiUrl } from './Constants';
+import LottiePlayer from './LottiePlayer';
+import AnimationService from './utils/AnimationService';
+import TextService from './utils/TextService';
+import { CodeOutlined, CopyOutlined } from '@ant-design/icons';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import ScenePlayer from './ScenePlayer';
+import SceneVideoPlayer from './SceneVideoPlayer';
+import type { AnimationPosition } from './types/AnimationType';
 
 type Props = {
   charterId: number;
@@ -23,66 +23,57 @@ type Props = {
 
 const useStyles = createUseStyles({
   animationContainer: {
-    width: "70%",
-    display: "block",
+    width: '70%',
+    display: 'block',
     marginBottom: 40,
     marginTop: 10,
-    boxShadow: "0 8px 8px 0 hsla(0, 0%, 0%, 0.15) !important",
+    boxShadow: '0 8px 8px 0 hsla(0, 0%, 0%, 0.15) !important',
   },
   error: {
-    textAlign: "left",
+    textAlign: 'left',
   },
   lottieAnimationButton: {
     marginLeft: 15,
   },
   lottieFile: {
     fontSize: 10,
-    background: "#6b6b6b",
-    color: "white",
+    background: '#6b6b6b',
+    color: 'white',
   },
   copyToClipboardButton: {
     marginBottom: 20,
   },
   cardTitle: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
   },
   positionDescriptor: {
     marginLeft: 15,
-    padding: ".2em .4em",
-    margin: "0",
-    fontSize: "60%",
-    backgroundColor: "rgba(27,31,35,.05)",
-    borderRadius: "3px",
-    fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
-    width: "fit-content",
+    padding: '.2em .4em',
+    margin: '0',
+    fontSize: '60%',
+    backgroundColor: 'rgba(27,31,35,.05)',
+    borderRadius: '3px',
+    fontFamily: 'SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace',
+    width: 'fit-content',
   },
 });
 
-const ScenePlayerCard = ({
-  charterId,
-  token,
-  theme,
-  animation,
-  format,
-  textLength,
-}: Props) => {
+const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLength }: Props) => {
   const [lottieJson, setLottieJson] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [error, setError] = useState<string>();
   const [animationTexts, setAnimationTexts] = useState<string[]>();
   const [position, setPosition] = useState<AnimationPosition>({
-    code: "FULLSCREEN",
+    code: 'FULLSCREEN',
   });
 
   const classes = useStyles();
 
   // Default animation texts for each animation depending on the selected textLength
   useEffect(() => {
-    setAnimationTexts(
-      TextService.getDefaultTextsByAnimationAndTextLength(animation, textLength)
-    );
+    setAnimationTexts(TextService.getDefaultTextsByAnimationAndTextLength(animation, textLength));
   }, [animation, textLength]);
 
   // Default animation positions
@@ -92,16 +83,7 @@ const ScenePlayerCard = ({
 
   // Fetch the actual Lottie file depending on the animation params
   useEffect(() => {
-    if (
-      !(
-        animation &&
-        theme &&
-        format &&
-        position &&
-        animationTexts &&
-        animationTexts.length > 0
-      )
-    ) {
+    if (!(animation && theme && format && position && animationTexts && animationTexts.length > 0)) {
       return;
     }
 
@@ -121,8 +103,8 @@ const ScenePlayerCard = ({
         timeout: 30000,
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
       })
       .then((response) => {
@@ -139,11 +121,7 @@ const ScenePlayerCard = ({
         }
 
         // General error case
-        const errorMsg = `Error with the following params: ${JSON.stringify(
-          params,
-          null,
-          2
-        )}
+        const errorMsg = `Error with the following params: ${JSON.stringify(params, null, 2)}
         
           Error: ${e.message}
         `;
@@ -163,46 +141,27 @@ const ScenePlayerCard = ({
 
   // Error panel
   const renderError = () => {
-    return (
-      <Alert
-        message="Error"
-        description={error}
-        type="error"
-        showIcon
-        className={classes.error}
-      />
-    );
+    return <Alert message="Error" description={error} type="error" showIcon className={classes.error} />;
   };
 
   // Modal to display the Lottie JSON code and copy it to clipboard
   const renderLottieCodeModal = () => {
     return (
-      <Modal
-        title={animation}
-        visible={isModalVisible}
-        onOk={onCloseModal}
-        onCancel={onCloseModal}
-      >
+      <Modal title={animation} visible={isModalVisible} onOk={onCloseModal} onCancel={onCloseModal}>
         {lottieJson && (
           <CopyToClipboard
             text={JSON.stringify(lottieJson, null, 2)}
             onCopy={(): void => {
-              message.info("JSON copied to clipboard");
+              message.info('JSON copied to clipboard');
             }}
           >
-            <Button
-              icon={<CopyOutlined />}
-              type="ghost"
-              className={classes.copyToClipboardButton}
-            >
+            <Button icon={<CopyOutlined />} type="ghost" className={classes.copyToClipboardButton}>
               Copy to clipboard
             </Button>
           </CopyToClipboard>
         )}
 
-        <pre className={classes.lottieFile}>
-          {JSON.stringify(lottieJson, null, 2)}
-        </pre>
+        <pre className={classes.lottieFile}>{JSON.stringify(lottieJson, null, 2)}</pre>
       </Modal>
     );
   };
@@ -225,7 +184,7 @@ const ScenePlayerCard = ({
   const renderOpenLottieModalButton = () => {
     return (
       <Button
-        type={"primary"}
+        type={'primary'}
         danger={!!error}
         onClick={onOpenModal}
         icon={<CodeOutlined />}
@@ -241,10 +200,7 @@ const ScenePlayerCard = ({
   return (
     <>
       <div className={classes.animationContainer}>
-        <Card
-          title={renderAnimationCardTitle()}
-          extra={renderOpenLottieModalButton()}
-        >
+        <Card title={renderAnimationCardTitle()} extra={renderOpenLottieModalButton()}>
           {isLoading && <Skeleton active />}
           {error && !isLoading && renderError()}
 

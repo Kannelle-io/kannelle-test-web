@@ -1,8 +1,8 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
-import { createUseStyles } from "react-jss";
-import SceneVideoPlayer from "./SceneVideoPlayer";
-import { AnimationPosition } from "./types/AnimationType";
-import AnimationService from "./utils/AnimationService";
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { createUseStyles } from 'react-jss';
+import SceneVideoPlayer from './SceneVideoPlayer';
+import { AnimationPosition } from './types/AnimationType';
+import AnimationService from './utils/AnimationService';
 
 type Props = {
   animation: string;
@@ -13,14 +13,14 @@ type Props = {
 
 const useStyles = createUseStyles({
   scenePlayerWrapper: {
-    background: "black",
+    background: 'black',
     height: 0,
-    paddingBottom: "56.25%", // (1 / ratio) * 100% where ratio = 16/9
-    width: "100%",
-    position: "relative",
+    paddingBottom: '56.25%', // (1 / ratio) * 100% where ratio = 16/9
+    width: '100%',
+    position: 'relative',
   },
   scenePlayerContainer: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     right: 0,
     bottom: 0,
@@ -28,12 +28,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const ScenePlayer: FunctionComponent<Props> = ({
-  animation,
-  lottieAnimation,
-  format,
-  animationPosition,
-}: Props) => {
+const ScenePlayer: FunctionComponent<Props> = ({ animation, lottieAnimation, format, animationPosition }: Props) => {
   const classes = useStyles();
   const [isSlide, setIsSlide] = useState(false);
   // For the demo

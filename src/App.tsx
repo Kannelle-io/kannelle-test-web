@@ -1,16 +1,11 @@
-import React, { ChangeEvent, useState } from "react";
-import "./styles.css";
-import { createUseStyles } from "react-jss";
-import FontsLoader from "./FontsLoader";
-import ScenePlayerCard from "./ScenePlayerCard";
-import "antd/dist/antd.css";
-import { Select, Form, Button, Input } from "antd";
-import {
-  ANIMATION_FORMATS,
-  ANIMATION_KEYS,
-  TEXT_LENGTHS,
-  THEME_KEYS,
-} from "./Constants";
+import React, { ChangeEvent, useState } from 'react';
+import './styles.css';
+import { createUseStyles } from 'react-jss';
+import FontsLoader from './FontsLoader';
+import ScenePlayerCard from './ScenePlayerCard';
+import 'antd/dist/antd.css';
+import { Select, Form, Button, Input } from 'antd';
+import { ANIMATION_FORMATS, ANIMATION_KEYS, TEXT_LENGTHS, THEME_KEYS } from './Constants';
 
 const { Option } = Select;
 
@@ -28,33 +23,27 @@ const { Option } = Select;
 
 const useStyles = createUseStyles({
   animationsContainer: {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
   },
   form: {
-    width: "50%",
-    margin: "auto",
+    width: '50%',
+    margin: 'auto',
     marginTop: 20,
   },
   formActions: {
-    textAlign: "left",
+    textAlign: 'left',
   },
 });
 
 export default function App() {
   const initToken =
-    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik0wWTVNa0pEUmpoRk9Ea3pOVU5FT1VVNU16bEVRekUzUmpoQk5UTkRSVEpGTURaRU5VWkJNQSJ9.eyJpc3MiOiJodHRwczovL2tubC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhYmU2ZDliOTc1NzQwYmY4MmE3NGQ4IiwiYXVkIjoiaHR0cHM6Ly9kZXYucmVzdC5rYW5uZWxsZS5pby92NCIsImlhdCI6MTYyMjgxMTc3NiwiZXhwIjoxNjIyODk4MTc2LCJhenAiOiJGbjFVRURnZHB6OFVBck9HRmhnZFZodUJIbTE5MHZ5WCIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOltdfQ.pNkE3aPggdsfaSQuKI3_hYE-kyGzggIX7TYR7zlVBdeEGumm54XeAuqUNM5y65TJR9P1PuSoYRg4x_YN6XhK8OJM1i6Jj0pMJ7lfRQUGCGPjnb5DDoCg3DJGTYm6_uiyjzRCbgeP6cSr-5JJcEY-twXq2ON97Y7ITAs9m82GvbEsWcTzgNNxp03-haRBpgX8oDu7XyR7aeEc7-u4iH5R3Gc7uLzX0ESi2yn7DLesqATZw2PNqBtUJta62tMCLr70t6cy4v5vRCNBTkSixvB1OfoXIc95r-VdRT6ZbAf4LM2_pVjQPaUGsqmazep0VjflMCsZ8p2A8CerlVElCL3OGw";
+    'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik0wWTVNa0pEUmpoRk9Ea3pOVU5FT1VVNU16bEVRekUzUmpoQk5UTkRSVEpGTURaRU5VWkJNQSJ9.eyJpc3MiOiJodHRwczovL2tubC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhYmU2ZDliOTc1NzQwYmY4MmE3NGQ4IiwiYXVkIjoiaHR0cHM6Ly9kZXYucmVzdC5rYW5uZWxsZS5pby92NCIsImlhdCI6MTYyMjgxMTc3NiwiZXhwIjoxNjIyODk4MTc2LCJhenAiOiJGbjFVRURnZHB6OFVBck9HRmhnZFZodUJIbTE5MHZ5WCIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOltdfQ.pNkE3aPggdsfaSQuKI3_hYE-kyGzggIX7TYR7zlVBdeEGumm54XeAuqUNM5y65TJR9P1PuSoYRg4x_YN6XhK8OJM1i6Jj0pMJ7lfRQUGCGPjnb5DDoCg3DJGTYm6_uiyjzRCbgeP6cSr-5JJcEY-twXq2ON97Y7ITAs9m82GvbEsWcTzgNNxp03-haRBpgX8oDu7XyR7aeEc7-u4iH5R3Gc7uLzX0ESi2yn7DLesqATZw2PNqBtUJta62tMCLr70t6cy4v5vRCNBTkSixvB1OfoXIc95r-VdRT6ZbAf4LM2_pVjQPaUGsqmazep0VjflMCsZ8p2A8CerlVElCL3OGw';
   const [token, setToken] = useState<string>(initToken);
-  const [selectedTheme, setSelectedTheme] = useState<string>(
-    THEME_KEYS.ALGIERS
-  );
-  const [selectedFormat, setSelectedFormat] = useState<string>(
-    ANIMATION_FORMATS.FORMAT_16_9
-  );
-  const [selectedTextLength, setSelectedTextLength] = useState<string>(
-    TEXT_LENGTHS.MEDIUM
-  );
+  const [selectedTheme, setSelectedTheme] = useState<string>(THEME_KEYS.ALGIERS);
+  const [selectedFormat, setSelectedFormat] = useState<string>(ANIMATION_FORMATS.FORMAT_16_9);
+  const [selectedTextLength, setSelectedTextLength] = useState<string>(TEXT_LENGTHS.MEDIUM);
 
   // Try with:
   // charterId = 6784 --> No charter font defined, we use the public fonts
@@ -93,12 +82,7 @@ export default function App() {
 
   const renderForm = () => {
     return (
-      <Form
-        {...layout}
-        name="basic"
-        className={classes.form}
-        initialValues={initialValues}
-      >
+      <Form {...layout} name="basic" className={classes.form} initialValues={initialValues}>
         <Form.Item label="Token (API v4)" name="token">
           <Input onChange={onTokenChange} />
         </Form.Item>

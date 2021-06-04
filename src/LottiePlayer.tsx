@@ -1,14 +1,8 @@
 // Adaptation of `react-lottie-player` (from v1.3.1)
 
-import isEqual from "lodash/isEqual";
-import lottie, { AnimationConfig } from "lottie-web";
-import React, {
-  FunctionComponent,
-  memo,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import isEqual from 'lodash/isEqual';
+import lottie, { AnimationConfig } from 'lottie-web';
+import React, { FunctionComponent, memo, useEffect, useRef, useState } from 'react';
 
 type Props = {
   animationData?: any;
@@ -20,7 +14,7 @@ type Props = {
   loop?: number | boolean;
   segments?: number[] | boolean;
   rendererSettings?: any;
-  renderer?: AnimationConfig["renderer"];
+  renderer?: AnimationConfig['renderer'];
   // audioFactory?: any;
   onLoad?: () => void;
   onComplete?: () => void;
@@ -42,7 +36,7 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     direction = 1,
     segments: segmentsIn,
     goTo = undefined,
-    renderer = "svg",
+    renderer = 'svg',
     loop = true,
     rendererSettings: rendererSettingsIn = {},
     // audioFactory = null,
@@ -66,35 +60,18 @@ const LottiePlayer: FunctionComponent<Props> = memo(
       if (!isEqual(segments, segmentsIn)) setSegments(segmentsIn);
     }, [segmentsIn, segments]);
 
-    const [rendererSettings, setRendererSettings] =
-      useState(rendererSettingsIn);
+    const [rendererSettings, setRendererSettings] = useState(rendererSettingsIn);
 
     // Prevent re-init
     useEffect(() => {
-      if (!isEqual(rendererSettings, rendererSettingsIn))
-        setRendererSettings(rendererSettingsIn);
+      if (!isEqual(rendererSettings, rendererSettingsIn)) setRendererSettings(rendererSettingsIn);
     }, [rendererSettingsIn, rendererSettings]);
 
     // In order to remove listeners before animRef gets destroyed:
-    useEffect(
-      () => () => animRef.current.removeEventListener("complete", onComplete),
-      [onComplete]
-    );
-    useEffect(
-      () => () =>
-        animRef.current.removeEventListener("loopComplete", onLoopComplete),
-      [onLoopComplete]
-    );
-    useEffect(
-      () => () =>
-        animRef.current.removeEventListener("enterFrame", onEnterFrame),
-      [onEnterFrame]
-    );
-    useEffect(
-      () => () =>
-        animRef.current.removeEventListener("segmentStart", onSegmentStart),
-      [onSegmentStart]
-    );
+    useEffect(() => () => animRef.current.removeEventListener('complete', onComplete), [onComplete]);
+    useEffect(() => () => animRef.current.removeEventListener('loopComplete', onLoopComplete), [onLoopComplete]);
+    useEffect(() => () => animRef.current.removeEventListener('enterFrame', onEnterFrame), [onEnterFrame]);
+    useEffect(() => () => animRef.current.removeEventListener('segmentStart', onSegmentStart), [onSegmentStart]);
 
     useEffect(() => {
       animRef.current = lottie.loadAnimation({
@@ -114,10 +91,10 @@ const LottiePlayer: FunctionComponent<Props> = memo(
           onLoad();
         }
       }
-      animRef.current.addEventListener("DOMLoaded", onDomLoaded);
+      animRef.current.addEventListener('DOMLoaded', onDomLoaded);
 
       return () => {
-        animRef.current.removeEventListener("DOMLoaded", onDomLoaded);
+        animRef.current.removeEventListener('DOMLoaded', onDomLoaded);
         setReady(false);
         animRef.current.destroy();
         animRef.current = undefined;
@@ -125,19 +102,19 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [loop, renderer, rendererSettings, animationData, path]); // audioFactory]);
 
     useEffect(() => {
-      animRef.current.addEventListener("complete", onComplete);
+      animRef.current.addEventListener('complete', onComplete);
     }, [onComplete]);
 
     useEffect(() => {
-      animRef.current.addEventListener("loopComplete", onLoopComplete);
+      animRef.current.addEventListener('loopComplete', onLoopComplete);
     }, [onLoopComplete]);
 
     useEffect(() => {
-      animRef.current.addEventListener("enterFrame", onEnterFrame);
+      animRef.current.addEventListener('enterFrame', onEnterFrame);
     }, [onEnterFrame]);
 
     useEffect(() => {
-      animRef.current.addEventListener("segmentStart", onSegmentStart);
+      animRef.current.addEventListener('segmentStart', onSegmentStart);
     }, [onSegmentStart]);
 
     useEffect(() => {
@@ -174,8 +151,7 @@ const LottiePlayer: FunctionComponent<Props> = memo(
           // Need to reset segments or else it will still play the old segments also when calling play()
           // wasPlayingSegmentsRef: Only reset segments if playSegments last time, because resetSegments will also reset playback position
           // https://github.com/airbnb/lottie-web/blob/master/index.d.ts
-          if (wasPlayingSegmentsRef.current)
-            animRef.current.resetSegments(force);
+          if (wasPlayingSegmentsRef.current) animRef.current.resetSegments(force);
           wasPlayingSegmentsRef.current = false;
 
           if (direction === -1) {

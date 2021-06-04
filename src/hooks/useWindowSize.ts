@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export type WindowSize = {
   height?: number;
@@ -6,7 +6,7 @@ export type WindowSize = {
 };
 
 const useWindowSize = (): WindowSize => {
-  const isClient = typeof window === "object";
+  const isClient = typeof window === 'object';
 
   const getSize = (): WindowSize => {
     return {
@@ -26,8 +26,8 @@ const useWindowSize = (): WindowSize => {
       setWindowSize(getSize());
     };
 
-    window.addEventListener("resize", handleResize);
-    return (): void => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return (): void => window.removeEventListener('resize', handleResize);
     // eslint-disable-next-line
   }, []); // Empty array ensures that effect is only run on mount and unmount
 
