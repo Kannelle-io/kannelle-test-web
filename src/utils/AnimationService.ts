@@ -61,6 +61,29 @@ class AnimationService {
     }
   };
 
+  static getVideoPlayerSizeByFormat = (
+    format: string,
+    playerTotalSize: { width: number; height: number }
+  ) => {
+    return {
+      height: playerTotalSize.height,
+      width:
+        playerTotalSize.height * AnimationService.getFormatAspectRatio(format),
+    };
+  };
+
+  static getFormatAspectRatio = (format: string) => {
+    switch (format) {
+      case ANIMATION_FORMATS.FORMAT_9_16:
+        return 9 / 16;
+      case ANIMATION_FORMATS.FORMAT_1_1:
+        return 1 / 1;
+      case ANIMATION_FORMATS.FORMAT_16_9:
+      default:
+        return 16 / 9;
+    }
+  };
+
   static isLowerThirdByPosition = (positionCode: string) => {
     return positionCode !== "FULLSCREEN";
   };

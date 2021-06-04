@@ -17,29 +17,40 @@ type Props = {
 };
 
 type StyleProps = {
-  lottiePlayerSize?: {
+  sceneVideoPlayerSize?: {
     height: number;
     width: number;
   };
-  videoPlayerSize?: {
+  lottiePlayerSize?: {
     height: number;
     width: number;
   };
 };
 
 const useStyles = createUseStyles({
-  sceneVideoPlayerContainer: {
+  sceneVideoPlayerWrapper: {
     height: "100%",
     width: "100%",
-    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
   },
+  sceneVideoPlayerContainer: ({ sceneVideoPlayerSize }: StyleProps) => ({
+    height: sceneVideoPlayerSize?.height ?? "100%",
+    width: sceneVideoPlayerSize?.width ?? "100%",
+    position: "relative",
+  }),
   videoContainer: {
     height: "100%",
   },
+  lottiePlayerContainer: {},
   lottiePlayer: ({ lottiePlayerSize }: StyleProps) => ({
     maxHeight: "100%",
     maxWidth: "100%",
     position: "absolute",
+    bottom: 0,
+    right: 0,
     height: lottiePlayerSize?.height ?? "100%",
     width: lottiePlayerSize?.width ?? "100%",
     "& > svg": {
@@ -56,12 +67,12 @@ const SceneVideoPlayer: FunctionComponent<Props> = ({
   format,
 }: // lottiePlayerSize,
 Props) => {
-  const [videoPlayerSize, setVideoPlayerSize] =
+  const [sceneVideoPlayerSize, setSceneVideoPlayerSize] =
     useState<{ width: number; height: number }>();
   const [lottiePlayerSize, setLottiePlayerSize] =
     useState<{ width: number; height: number }>();
 
-  const classes = useStyles({ lottiePlayerSize, videoPlayerSize });
+  const classes = useStyles({ lottiePlayerSize, sceneVideoPlayerSize });
   const sceneVideoPlayerRef = useRef<HTMLDivElement>(null);
   const videoPlayerRef = useRef<ReactPlayer>(null);
   const windowSize = useWindowSize();
@@ -69,13 +80,21 @@ Props) => {
   // From the rendered SceneVideoPlayer, calculate the new LottiePlayer size
   useEffect(() => {
     if (sceneVideoPlayerRef.current) {
+      const boundingRect = sceneVideoPlayerRef.current.getBoundingClientRect();
       const playerInitialSize = {
-        width: sceneVideoPlayerRef.current.clientWidth,
-        height: sceneVideoPlayerRef.current.clientHeight,
+        width: boundingRect.width,
+        height: boundingRect.height,
       };
+
+      const videoPlayerSize = AnimationService.getVideoPlayerSizeByFormat(
+        format,
+        playerInitialSize
+      );
+      setSceneVideoPlayerSize(videoPlayerSize);
+
       const newLottiePlayerSize = AnimationService.getAnimationPlayerSize(
         lottieAnimation,
-        playerInitialSize,
+        videoPlayerSize,
         format
       );
       setLottiePlayerSize(newLottiePlayerSize);
@@ -83,28 +102,27 @@ Props) => {
   }, [lottieAnimation, format, sceneVideoPlayerRef, windowSize]);
 
   return (
-    <div
-      className={classes.sceneVideoPlayerContainer}
-      ref={sceneVideoPlayerRef}
-    >
-      {!isSlide && videoUrl && (
-        <div className={classes.videoContainer}>
-          <ReactPlayer
-            url={videoUrl}
-            width="100%"
-            height="100%"
-            ref={videoPlayerRef}
+    <div ref={sceneVideoPlayerRef} className={classes.sceneVideoPlayerWrapper}>
+      <div className={classes.sceneVideoPlayerContainer}>
+        {!isSlide && videoUrl && (
+          <div className={classes.videoContainer}>
+            <ReactPlayer
+              url={videoUrl}
+              width="100%"
+              height="100%"
+              ref={videoPlayerRef}
+            />
+          </div>
+        )}
+
+        <div className={classes.lottiePlayerContainer}>
+          <LottiePlayer
+            animationData={lottieAnimation}
+            play
+            loop
+            className={classes.lottiePlayer}
           />
         </div>
-      )}
-
-      <div>
-        <LottiePlayer
-          animationData={lottieAnimation}
-          play
-          loop
-          className={classes.lottiePlayer}
-        />
       </div>
     </div>
   );
