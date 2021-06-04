@@ -2,10 +2,9 @@ import React, { ChangeEvent, useState } from "react";
 import "./styles.css";
 import { createUseStyles } from "react-jss";
 import FontsLoader from "./FontsLoader";
-import AnimationPlayer from "./AnimationPlayer";
+import ScenePlayerCard from "./ScenePlayerCard";
 import "antd/dist/antd.css";
 import { Select, Form, Button, Input } from "antd";
-
 import {
   ANIMATION_FORMATS,
   ANIMATION_KEYS,
@@ -21,7 +20,7 @@ const { Option } = Select;
  * 3. Play with the params
  *    - Theme and format
  *    - `animationTexts` in the code
- *    -  `position` (code, x, y) in AnimationPlayer.tsx
+ *    -  `position` (code, x, y) in ScenePlayerCard.tsx
  *    ➡️ The animation will update
  *    ➡️ You can see the generated Lottie file in the console
  *    ➡️ Both the public AND the charter fonts stylesheets are being downloaded and injected
@@ -149,7 +148,7 @@ export default function App() {
           }
 
           return (
-            <AnimationPlayer
+            <ScenePlayerCard
               charterId={charterId}
               token={token}
               theme={selectedTheme}
@@ -160,7 +159,7 @@ export default function App() {
             />
           );
         })}
-        {/* <AnimationPlayer
+        {/* <ScenePlayerCard
           charterId={charterId}
           token={token}
           theme={selectedTheme}

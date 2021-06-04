@@ -8,6 +8,8 @@ import AnimationService from "./utils/AnimationService";
 import TextService from "./utils/TextService";
 import { CodeOutlined, CopyOutlined } from "@ant-design/icons";
 import CopyToClipboard from "react-copy-to-clipboard";
+import ScenePlayer from "./ScenePlayer";
+import SceneVideoPlayer from "./SceneVideoPlayer";
 
 type Props = {
   charterId: number;
@@ -18,14 +20,6 @@ type Props = {
   textLength: string;
 };
 
-type StyleProps = {
-  playerSize: {
-    height: number;
-    width: number;
-  };
-  format: string;
-};
-
 const useStyles = createUseStyles({
   animationContainer: {
     width: "70%",
@@ -33,40 +27,6 @@ const useStyles = createUseStyles({
     marginBottom: 40,
     marginTop: 10,
     boxShadow: "0 8px 8px 0 hsla(0, 0%, 0%, 0.15) !important",
-  },
-  lottiePlayer: ({ playerSize }: StyleProps) => ({
-    maxHeight: "100%",
-    height: playerSize?.height ?? "100%",
-    width: playerSize?.width ?? "100%",
-    "& > svg": {
-      maxHeight: "100%",
-      display: "block",
-    },
-  }),
-  playerContainer: ({ format }: StyleProps) => {
-    const height =
-      format === ANIMATION_FORMATS.FORMAT_9_16 ||
-      format === ANIMATION_FORMATS.FORMAT_1_1
-        ? 400
-        : undefined;
-
-    const width =
-      format === ANIMATION_FORMATS.FORMAT_16_9 ||
-      format === ANIMATION_FORMATS.FORMAT_1_1
-        ? 400
-        : undefined;
-
-    return {
-      marginTop: 20,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height,
-      width,
-
-      // To center it
-      margin: "auto",
-    };
   },
   error: {
     textAlign: "left",
@@ -98,7 +58,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const AnimationPlayer = ({
+const ScenePlayerCard = ({
   charterId,
   token,
   theme,
@@ -110,16 +70,11 @@ const AnimationPlayer = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [error, setError] = useState<string>();
-  const [playerSize, setPlayerSize] = useState<any>();
   const [animationTexts, setAnimationTexts] = useState<string[]>();
   const [position, setPosition] =
     useState<{ code: string; x?: number; y?: number }>();
 
-  const playerRef = useRef<any>();
-
-  console.log(`animation: ${animation}, playerSize:`, playerSize);
-
-  const classes = useStyles({ playerSize, format });
+  const classes = useStyles();
 
   useEffect(() => {
     setAnimationTexts(
@@ -130,21 +85,6 @@ const AnimationPlayer = ({
   useEffect(() => {
     setPosition(AnimationService.getDefaultPosition(theme, animation));
   }, [animation, theme]);
-
-  useEffect(() => {
-    if (playerRef.current) {
-      const playerInitialSize = {
-        width: playerRef.current.clientWidth,
-        height: playerRef.current.clientHeight,
-      };
-      const newPlayerSize = AnimationService.getAnimationPlayerSize(
-        lottieJson,
-        playerInitialSize,
-        format
-      );
-      setPlayerSize(newPlayerSize);
-    }
-  }, [lottieJson, format, playerRef]);
 
   useEffect(() => {
     if (
@@ -271,36 +211,34 @@ const AnimationPlayer = ({
     );
   };
 
+  const renderOpenLottieModalButton = () => {
+    return (
+      <Button
+        type={"primary"}
+        danger={!!error}
+        onClick={onOpenModal}
+        icon={<CodeOutlined />}
+        className={classes.lottieAnimationButton}
+        loading={isLoading}
+        disabled={isLoading}
+      >
+        Lottie code
+      </Button>
+    );
+  };
+
   return (
     <>
       <div className={classes.animationContainer}>
         <Card
           title={renderAnimationCardTitle()}
-          extra={
-            <Button
-              type={"primary"}
-              danger={!!error}
-              onClick={onOpenModal}
-              icon={<CodeOutlined />}
-              className={classes.lottieAnimationButton}
-              loading={isLoading}
-              disabled={isLoading}
-            >
-              Lottie code
-            </Button>
-          }
+          extra={renderOpenLottieModalButton()}
         >
           {isLoading && <Skeleton active />}
           {error && !isLoading && renderError()}
+
           {lottieJson && !error && !isLoading && (
-            <div ref={playerRef} className={classes.playerContainer}>
-              <LottiePlayer
-                animationData={lottieJson}
-                play
-                loop
-                className={classes.lottiePlayer}
-              />
-            </div>
+            <ScenePlayer lottieAnimation={lottieJson} format={format} />
           )}
         </Card>
       </div>
@@ -310,4 +248,4 @@ const AnimationPlayer = ({
   );
 };
 
-export default AnimationPlayer;
+export default ScenePlayerCard;
