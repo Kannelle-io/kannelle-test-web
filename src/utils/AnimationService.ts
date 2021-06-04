@@ -58,6 +58,10 @@ class AnimationService {
     }
   };
 
+  static isLowerThirdByPosition = (positionCode: string) => {
+    return positionCode !== "FULLSCREEN";
+  };
+
   // Helpers
   static getDefaultPosition = (theme: string, animation: string) => {
     // Special case for BERLIN-NISSAN: animation is like BOTTOMCENTER

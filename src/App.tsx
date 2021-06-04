@@ -45,7 +45,7 @@ const useStyles = createUseStyles({
 
 export default function App() {
   const initToken =
-    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik0wWTVNa0pEUmpoRk9Ea3pOVU5FT1VVNU16bEVRekUzUmpoQk5UTkRSVEpGTURaRU5VWkJNQSJ9.eyJpc3MiOiJodHRwczovL2tubC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhYmU2ZDliOTc1NzQwYmY4MmE3NGQ4IiwiYXVkIjoiaHR0cHM6Ly9kZXYucmVzdC5rYW5uZWxsZS5pby92NCIsImlhdCI6MTYyMjYzNTM5MSwiZXhwIjoxNjIyNzIxNzkxLCJhenAiOiJGbjFVRURnZHB6OFVBck9HRmhnZFZodUJIbTE5MHZ5WCIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOltdfQ.l8_9Fvnh5jMiYDwhfyz7H6jLx1iPSa5Li-jh_wH2Xjm--JiIn1ewKo91colJYLt4O0A-QIZCmy_hpwEfasuTnRhEAZ3o-awaOzSNkDeV8CNSgKal9ruAxdZdI8_aQS71DrHIkm8HtaT45PQkZKPy1B-S0vqLy8F29Pfn6Gyr2s7woXA5cS6IoSLqsKPMoWNTVQqssLPvDQvgOhA6JTiXOu96JmibKlhruJ4scqL-M0hqftzQ7irUACQh-iPl19DvcrM_HHob_lShQB2p5D5agCMOeqL81BvAwomIV0A8IdTlPi1lSFahXs7ax-cSYhgDgjMIr5Dor7MvXCJ-4puIHA";
+    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik0wWTVNa0pEUmpoRk9Ea3pOVU5FT1VVNU16bEVRekUzUmpoQk5UTkRSVEpGTURaRU5VWkJNQSJ9.eyJpc3MiOiJodHRwczovL2tubC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhYmU2ZDliOTc1NzQwYmY4MmE3NGQ4IiwiYXVkIjoiaHR0cHM6Ly9kZXYucmVzdC5rYW5uZWxsZS5pby92NCIsImlhdCI6MTYyMjcyNDk4OSwiZXhwIjoxNjIyODExMzg5LCJhenAiOiJGbjFVRURnZHB6OFVBck9HRmhnZFZodUJIbTE5MHZ5WCIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOltdfQ.N39_3Hst3oTfUGDpcDM3KPUoZ3j8DEhv4G1mVFeXxW9RAf6BW6gQ1XqQ9lvmRGAoC_xn4d5gye9BsX9RX0Phd1SZBO1DyPHyWyNnSpIAycuhwwTu7zxpdPGQ0-mh-JrFPA1lF97VsN12vrqi4t9lPFNFsslcVCjWz5iNJayvx0mVFvGr7fUrF36yycFRmwJ8-ycaXB4NbveybunqEVczADJl3_csjp49-wyO_aobOjlPqGz64EiCHhJAD_h5u2RdHi_P7alcjC908nnXmGY3Jyztu9QCENxLvrPgBT_oZUO543CsazeNjk832B4biYC-zVa9TkjGDcRE1qPmqALJbg";
   const [token, setToken] = useState<string>(initToken);
   const [selectedTheme, setSelectedTheme] = useState<string>(
     THEME_KEYS.ALGIERS
@@ -54,7 +54,7 @@ export default function App() {
     ANIMATION_FORMATS.FORMAT_16_9
   );
   const [selectedTextLength, setSelectedTextLength] = useState<string>(
-    TEXT_LENGTHS.LARGE
+    TEXT_LENGTHS.MEDIUM
   );
 
   const [form] = Form.useForm();
@@ -74,7 +74,7 @@ export default function App() {
     token: initToken,
     theme: THEME_KEYS.ALGIERS,
     format: ANIMATION_FORMATS.FORMAT_16_9,
-    textLength: TEXT_LENGTHS.LARGE,
+    textLength: TEXT_LENGTHS.MEDIUM,
   };
 
   const onTokenChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -140,17 +140,26 @@ export default function App() {
       </Form>
 
       <div className={classes.animationsContainer}>
-        {Object.values(ANIMATION_KEYS).map((animationKey: string) => (
-          <AnimationPlayer
-            charterId={charterId}
-            token={token}
-            theme={selectedTheme}
-            animation={animationKey}
-            format={selectedFormat}
-            textLength={selectedTextLength}
-            key={animationKey}
-          />
-        ))}
+        {Object.values(ANIMATION_KEYS).map((animationKey: string) => {
+          if (
+            animationKey !== ANIMATION_KEYS.MAZDA &&
+            animationKey !== ANIMATION_KEYS.FORD
+          ) {
+            return;
+          }
+
+          return (
+            <AnimationPlayer
+              charterId={charterId}
+              token={token}
+              theme={selectedTheme}
+              animation={animationKey}
+              format={selectedFormat}
+              textLength={selectedTextLength}
+              key={animationKey}
+            />
+          );
+        })}
         {/* <AnimationPlayer
           charterId={charterId}
           token={token}

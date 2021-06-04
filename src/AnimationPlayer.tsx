@@ -2,7 +2,7 @@ import { Alert, Button, Card, message, Modal, Skeleton } from "antd";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { createUseStyles } from "react-jss";
-import { apiUrl } from "./Constants";
+import { ANIMATION_FORMATS, apiUrl } from "./Constants";
 import LottiePlayer from "./LottiePlayer";
 import AnimationService from "./utils/AnimationService";
 import TextService from "./utils/TextService";
@@ -23,6 +23,7 @@ type StyleProps = {
     height: number;
     width: number;
   };
+  format: string;
 };
 
 const useStyles = createUseStyles({
@@ -35,18 +36,37 @@ const useStyles = createUseStyles({
   },
   lottiePlayer: ({ playerSize }: StyleProps) => ({
     maxHeight: "100%",
-    height: playerSize?.height ?? 500,
-    width: playerSize?.width ?? 500,
+    height: playerSize?.height ?? "100%",
+    width: playerSize?.width ?? "100%",
     "& > svg": {
       maxHeight: "100%",
       display: "block",
     },
   }),
-  playerContainer: {
-    marginTop: 20,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+  playerContainer: ({ format }: StyleProps) => {
+    const height =
+      format === ANIMATION_FORMATS.FORMAT_9_16 ||
+      format === ANIMATION_FORMATS.FORMAT_1_1
+        ? 400
+        : undefined;
+
+    const width =
+      format === ANIMATION_FORMATS.FORMAT_16_9 ||
+      format === ANIMATION_FORMATS.FORMAT_1_1
+        ? 400
+        : undefined;
+
+    return {
+      marginTop: 20,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height,
+      width,
+
+      // To center it
+      margin: "auto",
+    };
   },
   error: {
     textAlign: "left",
@@ -97,7 +117,9 @@ const AnimationPlayer = ({
 
   const playerRef = useRef<any>();
 
-  const classes = useStyles({ playerSize });
+  console.log(`animation: ${animation}, playerSize:`, playerSize);
+
+  const classes = useStyles({ playerSize, format });
 
   useEffect(() => {
     setAnimationTexts(
