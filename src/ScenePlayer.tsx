@@ -8,8 +8,10 @@ import React, {
 import { createUseStyles } from "react-jss";
 import SceneVideoPlayer from "./SceneVideoPlayer";
 import AnimationService from "./utils/AnimationService";
+import useWindowSize from "./hooks/useWindowSize";
 
 type Props = {
+  animation: string;
   lottieAnimation: string;
   format: string;
 };
@@ -29,49 +31,41 @@ const useStyles = createUseStyles({
     bottom: 0,
     left: 0,
   },
-  playerContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
-  },
 });
 
 const ScenePlayer: FunctionComponent<Props> = ({
+  animation,
   lottieAnimation,
   format,
 }: Props) => {
   const classes = useStyles();
-  const [playerSize, setPlayerSize] =
-    useState<{ height: number; width: number }>();
-
-  const playerRef = useRef<any>();
+  const [isSlide, setIsSlide] = useState(false);
+  // For the demo
+  const [sampleVideo, setSampleVideo] = useState<string>();
 
   useEffect(() => {
-    if (playerRef.current) {
-      const playerInitialSize = {
-        width: playerRef.current.clientWidth,
-        height: playerRef.current.clientHeight,
-      };
-      const newPlayerSize = AnimationService.getAnimationPlayerSize(
-        lottieAnimation,
-        playerInitialSize,
-        format
-      );
-      setPlayerSize(newPlayerSize);
+    setIsSlide(AnimationService.isSlideAnimation(animation));
+  }, [animation]);
+
+  // For the demo
+  useEffect(() => {
+    if (isSlide) {
+      setSampleVideo(undefined);
+      return;
     }
-  }, [lottieAnimation, format, playerRef]);
+
+    setSampleVideo(AnimationService.getSampleVideoByFormat(format));
+  }, [isSlide, format]);
 
   return (
     <div className={classes.scenePlayerWrapper}>
       <div className={classes.scenePlayerContainer}>
-        <div className={classes.playerContainer} ref={playerRef}>
-          <SceneVideoPlayer
-            lottieAnimation={lottieAnimation}
-            playerSize={playerSize}
-          />
-        </div>
+        <SceneVideoPlayer
+          isSlide={isSlide}
+          videoUrl={sampleVideo}
+          lottieAnimation={lottieAnimation}
+          format={format}
+        />
       </div>
     </div>
   );

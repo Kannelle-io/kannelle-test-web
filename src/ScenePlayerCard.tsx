@@ -238,7 +238,11 @@ const ScenePlayerCard = ({
           {error && !isLoading && renderError()}
 
           {lottieJson && !error && !isLoading && (
-            <ScenePlayer lottieAnimation={lottieJson} format={format} />
+            <ScenePlayer
+              animation={animation}
+              lottieAnimation={lottieJson}
+              format={format}
+            />
           )}
         </Card>
       </div>
