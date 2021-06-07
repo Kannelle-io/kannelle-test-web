@@ -23,6 +23,8 @@ type Props = {
   onSegmentStart?: () => void;
   style?: React.CSSProperties;
   // Custom
+  onDurationChange?: (duration: number) => void;
+  onCurrentTimeChange?: (playedSeconds: number) => void;
   goToByFrame?: boolean;
   className?: string;
 };
@@ -46,6 +48,8 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     onEnterFrame = () => {},
     onSegmentStart = () => {},
     goToByFrame = false,
+    onDurationChange = () => {},
+    onCurrentTimeChange = () => {},
     ...props
   }: Props) => {
     const animElementRef = useRef<any>();
@@ -102,20 +106,62 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [loop, renderer, rendererSettings, animationData, path]); // audioFactory]);
 
     useEffect(() => {
+      if (!animRef.current) return;
+
       animRef.current.addEventListener('complete', onComplete);
+      return () => {
+        animRef.current?.removeEventListener('complete', onComplete);
+      };
     }, [onComplete]);
 
     useEffect(() => {
+      if (!animRef.current) return;
+
       animRef.current.addEventListener('loopComplete', onLoopComplete);
+      return () => {
+        animRef?.current?.removeEventListener('loopComplete', onLoopComplete);
+      };
     }, [onLoopComplete]);
 
     useEffect(() => {
+      if (!animRef.current) return;
+
       animRef.current.addEventListener('enterFrame', onEnterFrame);
+      return () => {
+        animRef?.current?.removeEventListener('enterFrame', onEnterFrame);
+      };
     }, [onEnterFrame]);
 
     useEffect(() => {
+      if (!animRef.current) return;
+
       animRef.current.addEventListener('segmentStart', onSegmentStart);
+      return () => {
+        return animRef?.current?.removeEventListener('segmentStart', onSegmentStart);
+      };
     }, [onSegmentStart]);
+
+    useEffect(() => {
+      if (!(ready && animRef.current)) return;
+      onDurationChange(animRef.current.getDuration());
+    }, [ready, onDurationChange]);
+
+    useEffect(() => {
+      if (!(ready && animRef.current)) return;
+
+      const updateCurrentTime = () => {
+        const duration = animRef.current.getDuration();
+        const currentFrame = animRef.current.currentFrame;
+        const totalFrames = animRef.current.totalFrames;
+        onCurrentTimeChange((currentFrame * duration) / totalFrames);
+      };
+
+      animRef.current.addEventListener('enterFrame', updateCurrentTime);
+
+      return () => {
+        animRef?.current?.removeEventListener('enterFrame', updateCurrentTime);
+      };
+    }, [ready, onCurrentTimeChange]);
 
     useEffect(() => {
       if (!(ready && animRef.current)) return;

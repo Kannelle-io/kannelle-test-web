@@ -142,6 +142,12 @@ class AnimationService {
     return AnimationService.getSlideAnimations().includes(animation);
   };
 
+  // Compute the scene current time percentage from the number of played seconds and
+  // the scene total duration
+  static getScenePercentage = (playedSeconds: number, sceneDuration: number) => {
+    return playedSeconds / sceneDuration;
+  };
+
   /**
    *
    * HELPERS (for Kannelle-Test)

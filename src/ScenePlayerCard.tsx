@@ -69,6 +69,9 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
   const [position, setPosition] = useState<AnimationPosition>({
     code: 'FULLSCREEN',
   });
+  const [isSlide, setIsSlide] = useState(false);
+  // For the demo
+  const [sampleVideo, setSampleVideo] = useState<string>();
 
   const classes = useStyles();
 
@@ -82,6 +85,21 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
     setPosition(AnimationService.getDefaultPosition(theme, animation));
   }, [animation, theme]);
 
+  // Check if the animation is a Slide
+  useEffect(() => {
+    setIsSlide(AnimationService.isSlideAnimation(animation));
+  }, [animation]);
+
+  // For the demo: select a sample video of the right format if the video is a Slide
+  useEffect(() => {
+    if (isSlide) {
+      setSampleVideo(undefined);
+      return;
+    }
+
+    setSampleVideo(AnimationService.getSampleVideoByFormat(format));
+  }, [isSlide, format]);
+
   // Fetch the actual Lottie file depending on the animation params
   useEffect(() => {
     if (!(animation && theme && format && position && animationTexts && animationTexts.length > 0)) {
@@ -94,6 +112,7 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
       format,
       animationTexts: animationTexts,
       position,
+      duration: !isSlide ? 9 : undefined, // For the demo, use the video sample duration
     };
 
     setIsLoading(true);
@@ -130,7 +149,7 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
         console.error(`Error with the following params:`, params, e);
       })
       .finally(() => setIsLoading(false));
-  }, [charterId, token, theme, animation, format, animationTexts, position]);
+  }, [charterId, token, theme, animation, format, animationTexts, position, isSlide]);
 
   const onOpenModal = () => {
     setIsModalVisible(true);
@@ -211,6 +230,8 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
               lottieAnimation={lottieJson}
               format={format}
               animationPosition={position}
+              isSlide={isSlide}
+              videoUrl={sampleVideo}
               showGrid={showGrid}
             />
           )}

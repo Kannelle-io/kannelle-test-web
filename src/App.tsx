@@ -138,12 +138,9 @@ export default function App() {
 
       <div className={classes.animationsContainer}>
         {Object.values(ANIMATION_KEYS).map((animationKey: string) => {
-          // if (
-          //   animationKey !== ANIMATION_KEYS.MAZDA &&
-          //   animationKey !== ANIMATION_KEYS.FORD
-          // ) {
-          //   return;
-          // }
+          if (animationKey !== ANIMATION_KEYS.MAZDA && animationKey !== ANIMATION_KEYS.FORD) {
+            return;
+          }
 
           return (
             <ScenePlayerCard

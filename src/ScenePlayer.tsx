@@ -9,6 +9,8 @@ type Props = {
   lottieAnimation: string;
   format: string;
   animationPosition: AnimationPosition;
+  isSlide: boolean;
+  videoUrl?: string;
   showGrid: boolean;
 };
 
@@ -34,34 +36,18 @@ const ScenePlayer: FunctionComponent<Props> = ({
   lottieAnimation,
   format,
   animationPosition,
+  isSlide,
+  videoUrl,
   showGrid,
 }: Props) => {
   const classes = useStyles();
-  const [isSlide, setIsSlide] = useState(false);
-  // For the demo
-  const [sampleVideo, setSampleVideo] = useState<string>();
-
-  // Check if the animation is a Slide
-  useEffect(() => {
-    setIsSlide(AnimationService.isSlideAnimation(animation));
-  }, [animation]);
-
-  // For the demo: select a sample video of the right format if the video is a Slide
-  useEffect(() => {
-    if (isSlide) {
-      setSampleVideo(undefined);
-      return;
-    }
-
-    setSampleVideo(AnimationService.getSampleVideoByFormat(format));
-  }, [isSlide, format]);
 
   return (
     <div className={classes.scenePlayerWrapper}>
       <div className={classes.scenePlayerContainer}>
         <SceneVideoPlayer
           isSlide={isSlide}
-          videoUrl={sampleVideo}
+          videoUrl={videoUrl}
           lottieAnimation={lottieAnimation}
           format={format}
           animationPosition={animationPosition}
