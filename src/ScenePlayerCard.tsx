@@ -19,6 +19,7 @@ type Props = {
   animation: string;
   format: string;
   textLength: string;
+  showGrid: boolean;
 };
 
 const useStyles = createUseStyles({
@@ -59,7 +60,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLength }: Props) => {
+const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLength, showGrid }: Props) => {
   const [lottieJson, setLottieJson] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -210,6 +211,7 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
               lottieAnimation={lottieJson}
               format={format}
               animationPosition={position}
+              showGrid={showGrid}
             />
           )}
         </Card>

@@ -9,6 +9,7 @@ type Props = {
   lottieAnimation: string;
   format: string;
   animationPosition: AnimationPosition;
+  showGrid: boolean;
 };
 
 const useStyles = createUseStyles({
@@ -28,7 +29,13 @@ const useStyles = createUseStyles({
   },
 });
 
-const ScenePlayer: FunctionComponent<Props> = ({ animation, lottieAnimation, format, animationPosition }: Props) => {
+const ScenePlayer: FunctionComponent<Props> = ({
+  animation,
+  lottieAnimation,
+  format,
+  animationPosition,
+  showGrid,
+}: Props) => {
   const classes = useStyles();
   const [isSlide, setIsSlide] = useState(false);
   // For the demo
@@ -58,6 +65,7 @@ const ScenePlayer: FunctionComponent<Props> = ({ animation, lottieAnimation, for
           lottieAnimation={lottieAnimation}
           format={format}
           animationPosition={animationPosition}
+          showGrid={showGrid}
         />
       </div>
     </div>

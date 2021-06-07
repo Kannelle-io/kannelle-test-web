@@ -5,6 +5,7 @@ import useWindowSize from './hooks/useWindowSize';
 import LottiePlayer from './LottiePlayer';
 import { AnimationPosition, AnimationPositionStyle, Size } from './types/AnimationType';
 import AnimationService from './utils/AnimationService';
+import RuleOfThirdsGrid from './RuleOfThirdsGrid';
 
 type Props = {
   isSlide: boolean;
@@ -12,6 +13,7 @@ type Props = {
   lottieAnimation: any;
   format: string;
   animationPosition: AnimationPosition;
+  showGrid: boolean;
 };
 
 type StyleProps = {
@@ -63,6 +65,7 @@ const SceneVideoPlayer: FunctionComponent<Props> = ({
   lottieAnimation,
   format,
   animationPosition,
+  showGrid,
 }: Props) => {
   const [sceneVideoPlayerSize, setSceneVideoPlayerSize] = useState<Size>();
   const [lottiePlayerSize, setLottiePlayerSize] = useState<Size>();
@@ -104,6 +107,7 @@ const SceneVideoPlayer: FunctionComponent<Props> = ({
   return (
     <div ref={sceneVideoPlayerRef} className={classes.sceneVideoPlayerWrapper}>
       <div className={classes.sceneVideoPlayerContainer}>
+        {showGrid && <RuleOfThirdsGrid />}
         {!isSlide && videoUrl && (
           <div className={classes.videoContainer}>
             <ReactPlayer url={videoUrl} width="100%" height="100%" ref={videoPlayerRef} />

@@ -4,8 +4,9 @@ import { createUseStyles } from 'react-jss';
 import FontsLoader from './FontsLoader';
 import ScenePlayerCard from './ScenePlayerCard';
 import 'antd/dist/antd.css';
-import { Select, Form, Button, Input } from 'antd';
+import { Select, Form, Button, Input, Checkbox } from 'antd';
 import { ANIMATION_FORMATS, ANIMATION_KEYS, TEXT_LENGTHS, THEME_KEYS } from './Constants';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 const { Option } = Select;
 
@@ -39,11 +40,12 @@ const useStyles = createUseStyles({
 
 export default function App() {
   const initToken =
-    'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik0wWTVNa0pEUmpoRk9Ea3pOVU5FT1VVNU16bEVRekUzUmpoQk5UTkRSVEpGTURaRU5VWkJNQSJ9.eyJpc3MiOiJodHRwczovL2tubC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhYmU2ZDliOTc1NzQwYmY4MmE3NGQ4IiwiYXVkIjoiaHR0cHM6Ly9kZXYucmVzdC5rYW5uZWxsZS5pby92NCIsImlhdCI6MTYyMjgxMTc3NiwiZXhwIjoxNjIyODk4MTc2LCJhenAiOiJGbjFVRURnZHB6OFVBck9HRmhnZFZodUJIbTE5MHZ5WCIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOltdfQ.pNkE3aPggdsfaSQuKI3_hYE-kyGzggIX7TYR7zlVBdeEGumm54XeAuqUNM5y65TJR9P1PuSoYRg4x_YN6XhK8OJM1i6Jj0pMJ7lfRQUGCGPjnb5DDoCg3DJGTYm6_uiyjzRCbgeP6cSr-5JJcEY-twXq2ON97Y7ITAs9m82GvbEsWcTzgNNxp03-haRBpgX8oDu7XyR7aeEc7-u4iH5R3Gc7uLzX0ESi2yn7DLesqATZw2PNqBtUJta62tMCLr70t6cy4v5vRCNBTkSixvB1OfoXIc95r-VdRT6ZbAf4LM2_pVjQPaUGsqmazep0VjflMCsZ8p2A8CerlVElCL3OGw';
+    'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik0wWTVNa0pEUmpoRk9Ea3pOVU5FT1VVNU16bEVRekUzUmpoQk5UTkRSVEpGTURaRU5VWkJNQSJ9.eyJpc3MiOiJodHRwczovL2tubC5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVhYmU2ZDliOTc1NzQwYmY4MmE3NGQ4IiwiYXVkIjoiaHR0cHM6Ly9kZXYucmVzdC5rYW5uZWxsZS5pby92NCIsImlhdCI6MTYyMzA1MTYwMSwiZXhwIjoxNjIzMTM4MDAxLCJhenAiOiJGbjFVRURnZHB6OFVBck9HRmhnZFZodUJIbTE5MHZ5WCIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOltdfQ.K889zAnSaqYIcxhwBOdZvobE84I6t9FcTdZS9nES164cVBvgfnp3G3iLWY4yZNadYwBwVZm7h77ZQQnSTsbR6hO1ozZcNXIzhn6HRUg8i4y-TZkXfHkHXWXlmJ1utAI5ddlT1VJVxvf4qXtPgOkZJeG6rthQzklOL3EDZufw0Lz3q3GhB_JQhP1C3IGzo7I99RFSYTssXEly39mS9u1fRRTM9Q2zQX_wOP6zTP2Y7T0Ba6NYwwAPxOIM7_7-ZEolOrVC9q87f1qTTnZ_iwYXZMx5IQaK_PR6apXrJ2zAj3PWjNegqIdnsE3zFvl33UuhfzQhbs1y1uFfT8VT5Bq8dA';
   const [token, setToken] = useState<string>(initToken);
   const [selectedTheme, setSelectedTheme] = useState<string>(THEME_KEYS.ALGIERS);
   const [selectedFormat, setSelectedFormat] = useState<string>(ANIMATION_FORMATS.FORMAT_16_9);
   const [selectedTextLength, setSelectedTextLength] = useState<string>(TEXT_LENGTHS.MEDIUM);
+  const [showGrid, setShowGrid] = useState(true);
 
   // Try with:
   // charterId = 6784 --> No charter font defined, we use the public fonts
@@ -78,6 +80,10 @@ export default function App() {
 
   const onTextLengthChange = (value: string) => {
     setSelectedTextLength(value);
+  };
+
+  const onShowGridChange = (e: CheckboxChangeEvent) => {
+    setShowGrid(e.target.checked);
   };
 
   const renderForm = () => {
@@ -116,6 +122,10 @@ export default function App() {
             ))}
           </Select>
         </Form.Item>
+
+        <Form.Item label="Rule of third grid" name="showGrid">
+          <Checkbox onChange={onShowGridChange} checked={showGrid} />
+        </Form.Item>
       </Form>
     );
   };
@@ -143,6 +153,7 @@ export default function App() {
               animation={animationKey}
               format={selectedFormat}
               textLength={selectedTextLength}
+              showGrid={showGrid}
               key={animationKey}
             />
           );
