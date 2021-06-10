@@ -1,0 +1,8 @@
+{
+  "global": {
+    "backToHome": "Retour à l'accueil"
+  },
+  "dropDown": {
+    "logout": "Déconnexion"
+  }
+}

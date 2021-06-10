@@ -1,4 +1,4 @@
-import { ANIMATION_KEYS, TEXT_LENGTHS } from './../Constants';
+import { ANIMATION_KEYS, TEXT_LENGTHS } from '../Constants';
 
 class TextService {
   static getDefaultTextsByAnimationAndTextLength = (animationName: string, textLength: string) => {
@@ -13,7 +13,9 @@ class TextService {
     }
   };
 
+  // eslint-disable-next-line consistent-return
   static getShortDefaultTextsByAnimation = (animationName: string) => {
+    // eslint-disable-next-line default-case
     switch (animationName) {
       case ANIMATION_KEYS.AUSTIN:
         return ['Actors', 'Viewers', '+23%', 'Listeners', '-63%'];
@@ -91,7 +93,9 @@ class TextService {
     }
   };
 
+  // eslint-disable-next-line consistent-return
   static getMediumDefaultTextsByAnimation = (animationName: string) => {
+    // eslint-disable-next-line default-case
     switch (animationName) {
       case ANIMATION_KEYS.AUSTIN:
         return [
@@ -182,7 +186,9 @@ class TextService {
     }
   };
 
+  // eslint-disable-next-line consistent-return
   static getLongDefaultTextsByAnimation = (animationName: string) => {
+    // eslint-disable-next-line default-case
     switch (animationName) {
       case ANIMATION_KEYS.AUSTIN:
         return [
