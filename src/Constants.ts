@@ -10,6 +10,11 @@ export enum THEME_KEYS {
   BOGOTA = 'BOGOTA',
 }
 
+export enum CHARTER_ID {
+  NO_CHARTER = '6784',
+  CHARTER = '6857',
+}
+
 export enum ANIMATION_FORMATS {
   FORMAT_16_9 = '16:9',
   FORMAT_1_1 = '1:1',

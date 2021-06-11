@@ -4,7 +4,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import React, { useContext, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { ReactReduxContext } from 'react-redux';
-import { ANIMATION_FORMATS, ANIMATION_KEYS, TEXT_LENGTHS, THEME_KEYS } from '../../Constants';
+import { ANIMATION_FORMATS, ANIMATION_KEYS, CHARTER_ID, TEXT_LENGTHS, THEME_KEYS } from '../../Constants';
 import FontsLoader from '../fontsLoader/FontsLoader';
 import ScenePlayerCard from '../scenePlayer/components/ScenePlayerCard';
 
@@ -44,6 +44,7 @@ export const LottieAnimation = () => {
   const initToken = store.getState().app.apiToken;
   const [token] = useState<string>(initToken);
   const [selectedTheme, setSelectedTheme] = useState<string>(THEME_KEYS.ALGIERS);
+  const [selectedCharter, setSelectedCharter] = useState<string>(CHARTER_ID.NO_CHARTER);
   const [selectedFormat, setSelectedFormat] = useState<string>(ANIMATION_FORMATS.FORMAT_16_9);
   const [selectedTextLength, setSelectedTextLength] = useState<string>(TEXT_LENGTHS.MEDIUM);
   const [showGrid, setShowGrid] = useState(true);
@@ -51,7 +52,7 @@ export const LottieAnimation = () => {
   // Try with:
   // charterId = 6784 --> No charter font defined, we use the public fonts
   // charterId = 6857 --> Charter fonts defined and loaded BUT badly rendered
-  const charterId = 6857;
+  // const charterId = 6784;
   const classes = useStyles();
 
   const layout = {
@@ -61,9 +62,14 @@ export const LottieAnimation = () => {
 
   const initialValues = {
     token: initToken,
+    charterId: CHARTER_ID.NO_CHARTER,
     theme: THEME_KEYS.ALGIERS,
     format: ANIMATION_FORMATS.FORMAT_16_9,
     textLength: TEXT_LENGTHS.MEDIUM,
+  };
+
+  const onCharterChange = (value: string) => {
+    setSelectedCharter(value);
   };
 
   const onThemeChange = (value: string) => {
@@ -85,6 +91,16 @@ export const LottieAnimation = () => {
   const renderForm = () => {
     return (
       <Form {...layout} name="basic" className={classes.form} initialValues={initialValues}>
+        <Form.Item label="CharterId" name="charterId">
+          <Select onChange={onCharterChange} value={selectedCharter}>
+            {Object.values(CHARTER_ID).map((charterKey: string) => (
+              <Option key={charterKey} value={charterKey}>
+                {charterKey}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
         <Form.Item label="Theme" name="theme">
           <Select onChange={onThemeChange} value={selectedTheme}>
             {Object.values(THEME_KEYS).map((themeKey: string) => (
@@ -124,7 +140,7 @@ export const LottieAnimation = () => {
 
   return (
     <div className="App">
-      <FontsLoader charterId={charterId} token={token} />
+      <FontsLoader charterId={Number(selectedCharter)} token={token} />
 
       {renderForm()}
 
@@ -136,7 +152,7 @@ export const LottieAnimation = () => {
 
           return (
             <ScenePlayerCard
-              charterId={charterId}
+              charterId={Number(selectedCharter)}
               token={token}
               theme={selectedTheme}
               animation={animationKey}
