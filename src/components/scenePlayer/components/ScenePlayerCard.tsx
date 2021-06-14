@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { createUseStyles } from 'react-jss';
 import { apiUrl } from '../../../Constants';
+import AnimationService from '../../../services/AnimationService';
 import type { AnimationPosition } from '../../../types/AnimationType';
-import AnimationService from '../../../utils/AnimationService';
 import TextService from '../../../utils/TextService';
 import ScenePlayer from '../ScenePlayer';
 

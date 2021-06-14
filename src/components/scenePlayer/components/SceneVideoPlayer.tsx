@@ -5,8 +5,8 @@ import { createUseStyles } from 'react-jss';
 import ReactPlayer from 'react-player';
 import RuleOfThirdsGrid from '../../../core/rule/RuleOfThirdsGrid';
 import useWindowSize from '../../../hooks/useWindowSize';
+import AnimationService from '../../../services/AnimationService';
 import { AnimationPosition, AnimationPositionStyle, Size } from '../../../types/AnimationType';
-import AnimationService from '../../../utils/AnimationService';
 import TimeUtils from '../../../utils/TimeUtils';
 import LottiePlayer from '../../lottiePlayer/LottiePlayer';
 

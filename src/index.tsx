@@ -31,6 +31,8 @@ const callbackInitLoggingTools = (user: any, newAuthentication: boolean): void =
       email: user.email,
       method: 'Email',
       name: user.name,
+      companyId: store ? store.getState()?.companies?.current?.id : undefined,
+      charter: store ? store.getState()?.charters?.list : undefined,
     });
   }
 };

@@ -1,10 +1,13 @@
 import { Checkbox, Form, Select } from 'antd';
 import 'antd/dist/antd.css';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { ReactReduxContext } from 'react-redux';
-import { ANIMATION_FORMATS, ANIMATION_KEYS, CHARTER_ID, TEXT_LENGTHS, THEME_KEYS } from '../../Constants';
+import { ANIMATION_FORMATS, ANIMATION_KEYS, TEXT_LENGTHS, THEME_KEYS } from '../../Constants';
+import Company from '../../model/Company';
+import { APIModelCharter } from '../../services/api/types/ChartersServiceTypes';
+import { APIModelCompany } from '../../services/api/types/CompaniesServiceTypes';
 import FontsLoader from '../fontsLoader/FontsLoader';
 import ScenePlayerCard from '../scenePlayer/components/ScenePlayerCard';
 
@@ -40,11 +43,11 @@ const useStyles = createUseStyles({
 
 export const LottieAnimation = () => {
   const { store } = useContext(ReactReduxContext);
-
   const initToken = store.getState().app.apiToken;
   const [token] = useState<string>(initToken);
   const [selectedTheme, setSelectedTheme] = useState<string>(THEME_KEYS.ALGIERS);
-  const [selectedCharter, setSelectedCharter] = useState<string>(CHARTER_ID.NO_CHARTER);
+  const [allCompanies, setAllCompanies] = useState<APIModelCompany[]>([]);
+  const [selectedCharter, setSelectedCharter] = useState<string>('');
   const [selectedFormat, setSelectedFormat] = useState<string>(ANIMATION_FORMATS.FORMAT_16_9);
   const [selectedTextLength, setSelectedTextLength] = useState<string>(TEXT_LENGTHS.MEDIUM);
   const [showGrid, setShowGrid] = useState(true);
@@ -58,14 +61,6 @@ export const LottieAnimation = () => {
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-  };
-
-  const initialValues = {
-    token: initToken,
-    charterId: CHARTER_ID.NO_CHARTER,
-    theme: THEME_KEYS.ALGIERS,
-    format: ANIMATION_FORMATS.FORMAT_16_9,
-    textLength: TEXT_LENGTHS.MEDIUM,
   };
 
   const onCharterChange = (value: string) => {
@@ -88,14 +83,55 @@ export const LottieAnimation = () => {
     setShowGrid(e.target.checked);
   };
 
+  const getAllChartersId = () => {
+    const chartersList = store
+      .getState()
+      ?.companies.list.map((company: Company) => company.charters.map((charters: APIModelCharter) => charters.id));
+    const newList = chartersList.reduce((prev: APIModelCharter[], next: APIModelCharter) => {
+      return prev.concat(next);
+    });
+    return newList.filter((elem: number, pos: number) => {
+      return newList.indexOf(elem) === pos;
+    });
+  };
+
+  const getAllCompanies = () => {
+    const companiesList = store.getState()?.companies.list.map((company: Company) => company.charters);
+    const newList = companiesList.reduce((prev: APIModelCompany[], next: APIModelCompany) => {
+      return prev.concat(next);
+    });
+
+    return [...new Set(newList.map((item: APIModelCompany) => JSON.stringify(item)))].map((value: any) =>
+      JSON.parse(value)
+    );
+  };
+
+  const getCharterByName = (id: string) => {
+    const index = allCompanies.findIndex((x) => x.id === Number(id));
+    return allCompanies[index]?.name;
+  };
+
+  const initialValues = {
+    token: initToken,
+    charterId: getAllCompanies()[0].name,
+    theme: THEME_KEYS.ALGIERS,
+    format: ANIMATION_FORMATS.FORMAT_16_9,
+    textLength: TEXT_LENGTHS.MEDIUM,
+  };
+
+  useEffect(() => {
+    setSelectedCharter(getAllCompanies()[0].id);
+    setAllCompanies(getAllCompanies());
+  }, [store]);
+
   const renderForm = () => {
     return (
       <Form {...layout} name="basic" className={classes.form} initialValues={initialValues}>
         <Form.Item label="CharterId" name="charterId">
           <Select onChange={onCharterChange} value={selectedCharter}>
-            {Object.values(CHARTER_ID).map((charterKey: string) => (
+            {getAllChartersId().map((charterKey: string) => (
               <Option key={charterKey} value={charterKey}>
-                {charterKey}
+                {getCharterByName(charterKey)}
               </Option>
             ))}
           </Select>

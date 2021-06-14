@@ -1,18 +1,27 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import App from './App';
-import { RootState } from './redux/RootState';
+import { useAuth0 } from './core/auth/Auth0Config';
+import { resetStoreState } from './redux/action/AppAction';
+import LocalStorage from './redux/LocalStorage';
 
 const AppInitializer: React.FunctionComponent = () => {
-  const isUserUnauthorized = useSelector((state: RootState) => state.app.isUnauthorized);
+  const { user, isAuthenticated } = useAuth0();
+  const dispatch = useDispatch();
 
-  // Hide the Satismeter widget for unauthorized users
-  // (in some cases, it might have been displayed before reaching the unauthorized page)
   useEffect(() => {
-    // eslint-disable-next-line no-empty
-    if (isUserUnauthorized === undefined || !isUserUnauthorized) {
+    if (!user || !isAuthenticated) {
+      return;
     }
-  }, [isUserUnauthorized]);
+
+    const auth0UserIdPrefix = process.env.REACT_APP_AUTH0_USER_ID_PREFIX ?? '';
+    const userId = user?.sub.replace(auth0UserIdPrefix, '');
+
+    const persistedState = LocalStorage.loadState();
+    if (persistedState?.user?.user?.id && persistedState?.user?.user?.id !== userId) {
+      dispatch(resetStoreState());
+    }
+  }, [user, isAuthenticated, dispatch]);
 
   return <App />;
 };

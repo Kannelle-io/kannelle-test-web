@@ -1,3 +1,6 @@
+import { Role } from '../core/rule/Roles';
+import Company from '../model/Company';
+import { APIModelCompany } from '../services/api/types/CompaniesServiceTypes';
 import { RootState, RootStateSerialized } from './RootState';
 
 export default class LocalStorage {
@@ -31,10 +34,17 @@ export default class LocalStorage {
       }
 
       const controlledSerializedState = { ...serializedState };
-      // we reset the processing assets always
+      const role = controlledSerializedState.user.role ? new Role(controlledSerializedState.user.role) : undefined;
+
       return {
+        charters: controlledSerializedState.charters,
+        companies: {
+          list: controlledSerializedState.companies.list.map((company: APIModelCompany) => new Company(company)),
+          current: new Company(controlledSerializedState.companies.current),
+        },
         user: {
           user: controlledSerializedState.user.user,
+          role,
         },
       };
     } catch (err) {

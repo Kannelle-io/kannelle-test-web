@@ -10,11 +10,6 @@ export enum THEME_KEYS {
   BOGOTA = 'BOGOTA',
 }
 
-export enum CHARTER_ID {
-  NO_CHARTER = '6784',
-  CHARTER = '6857',
-}
-
 export enum ANIMATION_FORMATS {
   FORMAT_16_9 = '16:9',
   FORMAT_1_1 = '1:1',
@@ -71,6 +66,32 @@ export const THEME = {
   },
   DEFAULT: {
     MAIN_COLOR: '#3371FF',
+  },
+  CHARTERS: {
+    ROLES: {
+      KnlTeam: {
+        TEXT_COLOR: '#0E5814',
+        BACKGROUND_COLOR: '#E3F9E5',
+      },
+      Admin: {
+        TEXT_COLOR: '#7C5E10',
+        BACKGROUND_COLOR: '#FCEFC7',
+      },
+      Owner: {
+        TEXT_COLOR: '#0B4F71',
+        BACKGROUND_COLOR: '#D1EEFC',
+      },
+      Creator: {
+        TEXT_COLOR: '#000000A6',
+        BACKGROUND_COLOR: '#EFEDED',
+      },
+    },
+    USERS: {
+      INACTIVE: {
+        TEXT_COLOR: '#610316',
+        BACKGROUND_COLOR: '#FFE3E3',
+      },
+    },
   },
 };
 
