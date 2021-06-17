@@ -52,10 +52,6 @@ export const LottieAnimation = () => {
   const [selectedTextLength, setSelectedTextLength] = useState<string>(TEXT_LENGTHS.MEDIUM);
   const [showGrid, setShowGrid] = useState(true);
 
-  // Try with:
-  // charterId = 6784 --> No charter font defined, we use the public fonts
-  // charterId = 6857 --> Charter fonts defined and loaded BUT badly rendered
-  // const charterId = 6784;
   const classes = useStyles();
 
   const layout = {
@@ -87,23 +83,16 @@ export const LottieAnimation = () => {
     const chartersList = store
       .getState()
       ?.companies.list.map((company: Company) => company.charters.map((charters: APIModelCharter) => charters.id));
-    const newList = chartersList.reduce((prev: APIModelCharter[], next: APIModelCharter) => {
+    return chartersList.reduce((prev: APIModelCharter[], next: APIModelCharter) => {
       return prev.concat(next);
-    });
-    return newList.filter((elem: number, pos: number) => {
-      return newList.indexOf(elem) === pos;
     });
   };
 
   const getAllCompanies = () => {
     const companiesList = store.getState()?.companies.list.map((company: Company) => company.charters);
-    const newList = companiesList.reduce((prev: APIModelCompany[], next: APIModelCompany) => {
+    return companiesList.reduce((prev: APIModelCompany[], next: APIModelCompany) => {
       return prev.concat(next);
     });
-
-    return [...new Set(newList.map((item: APIModelCompany) => JSON.stringify(item)))].map((value: any) =>
-      JSON.parse(value)
-    );
   };
 
   const getCharterByName = (id: string) => {
@@ -177,15 +166,9 @@ export const LottieAnimation = () => {
   return (
     <div className="App">
       <FontsLoader charterId={Number(selectedCharter)} token={token} />
-
       {renderForm()}
-
       <div className={classes.animationsContainer}>
         {Object.values(ANIMATION_KEYS).map((animationKey: string) => {
-          // if (animationKey !== ANIMATION_KEYS.MAZDA && animationKey !== ANIMATION_KEYS.FORD) {
-          //   return;
-          // }
-
           return (
             <ScenePlayerCard
               charterId={Number(selectedCharter)}
