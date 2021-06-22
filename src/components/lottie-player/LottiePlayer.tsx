@@ -4,6 +4,8 @@ import isEqual from 'lodash/isEqual';
 import lottie, { AnimationConfig } from 'lottie-web';
 import React, { FunctionComponent, memo, useEffect, useRef, useState } from 'react';
 
+/* eslint-disable @typescript-eslint/no-empty-function */
+
 type Props = {
   animationData?: any;
   path?: string;
@@ -42,20 +44,13 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     loop = true,
     rendererSettings: rendererSettingsIn = {},
     // audioFactory = null,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onLoad = () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onComplete = () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onLoopComplete = () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onEnterFrame = () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onSegmentStart = () => {},
     goToByFrame = false,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onDurationChange = () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onCurrentTimeChange = () => {},
     ...props
   }: Props) => {
@@ -113,40 +108,44 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [loop, renderer, rendererSettings, animationData, path]); // audioFactory]);
 
     useEffect(() => {
-      if (!animRef.current) return;
+      if (!animRef.current) {
+        return undefined;
+      }
 
       animRef.current.addEventListener('complete', onComplete);
-      // eslint-disable-next-line consistent-return
       return () => {
         animRef.current?.removeEventListener('complete', onComplete);
       };
     }, [onComplete]);
 
     useEffect(() => {
-      if (!animRef.current) return;
+      if (!animRef.current) {
+        return undefined;
+      }
 
       animRef.current.addEventListener('loopComplete', onLoopComplete);
-      // eslint-disable-next-line consistent-return
       return () => {
         animRef?.current?.removeEventListener('loopComplete', onLoopComplete);
       };
     }, [onLoopComplete]);
 
     useEffect(() => {
-      if (!animRef.current) return;
+      if (!animRef.current) {
+        return undefined;
+      }
 
       animRef.current.addEventListener('enterFrame', onEnterFrame);
-      // eslint-disable-next-line consistent-return
       return () => {
         animRef?.current?.removeEventListener('enterFrame', onEnterFrame);
       };
     }, [onEnterFrame]);
 
     useEffect(() => {
-      if (!animRef.current) return;
+      if (!animRef.current) {
+        return undefined;
+      }
 
       animRef.current.addEventListener('segmentStart', onSegmentStart);
-      // eslint-disable-next-line consistent-return
       return () => {
         return animRef?.current?.removeEventListener('segmentStart', onSegmentStart);
       };
@@ -158,7 +157,9 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [ready, onDurationChange]);
 
     useEffect(() => {
-      if (!(ready && animRef.current)) return;
+      if (!(ready && animRef.current)) {
+        return undefined;
+      }
 
       const updateCurrentTime = () => {
         const duration = animRef.current.getDuration();
@@ -169,7 +170,6 @@ const LottiePlayer: FunctionComponent<Props> = memo(
 
       animRef.current.addEventListener('enterFrame', updateCurrentTime);
 
-      // eslint-disable-next-line consistent-return
       return () => {
         animRef?.current?.removeEventListener('enterFrame', updateCurrentTime);
       };

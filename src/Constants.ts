@@ -97,7 +97,6 @@ export const THEME = {
 
 export const AXIOS_PARAMS = {
   TIMEOUT_IN_MS: 15000,
-  TIMEOUT_IN_MS_LARGE_FOR_KNL_TEAM_HEAVY_OPERATIONS: 30000,
 };
 
 export type RouteLink = { key: string; path: string; title: string };

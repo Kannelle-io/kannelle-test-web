@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Redirect, Router as DomRouter, Switch } from 'react-router-dom';
+import AnimationsList from '../../components/animations-list/AnimationsList';
 import { LINK } from '../../Constants';
-import Home from '../../pages/home/Home';
 import { useAuth0 } from '../auth/Auth0Config';
 import AuthBarrier from '../auth/AuthBarrier';
 import Shell from '../shell/Shell';
@@ -17,7 +17,7 @@ const Router: FunctionComponent = () => {
         <AuthBarrier>
           <Shell>
             <Switch>
-              <PrivateRoute key={LINK.HOME.key} path={LINK.HOME.path} exact component={Home} isAllowed />
+              <PrivateRoute key={LINK.HOME.key} path={LINK.HOME.path} exact component={AnimationsList} isAllowed />
               {isAuthenticated && <Redirect to="/home" />}
             </Switch>
           </Shell>

@@ -28,6 +28,10 @@ const styleMenu = createUseStyles({
       backgroundColor: THEME.MENU.MAIN_BACKGROUND_COLOR,
       transition: 'all 300ms ease-in-out',
     },
+    '& .ant-menu-title-content': {
+      display: 'flex',
+      alignItems: 'center',
+    },
   },
   menuItem: {
     display: 'flex',
@@ -45,14 +49,13 @@ const styleMenu = createUseStyles({
     '&:hover': {
       color: THEME.MENU.MAIN_TEXT_COLOR,
     },
+    marginRight: 10,
   },
 });
 
 const KannelleLogoutDropDownMenu: FunctionComponent = () => {
   const classes = styleMenu();
   const { t } = useTranslation();
-
-  // const loggingManager = useSelector((state: RootState) => state.app.loggingManager);
 
   const { user, isAuthenticated, logout } = useAuth0();
 

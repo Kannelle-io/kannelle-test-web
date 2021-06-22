@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react';
 import throttle from 'lodash/throttle';
 import { applyMiddleware, combineReducers, createStore, Middleware, Reducer, Store } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -38,11 +37,10 @@ export default class StoreCreator {
   initialize = (): Store => {
     const composeEnhancers = composeWithDevTools({ trace: true });
     const persistedState = LocalStorage.loadState();
-    const sentryReduxEnhancer = Sentry.createReduxEnhancer({});
     return createStore(
       this.createReducers(),
       persistedState,
-      composeEnhancers(applyMiddleware(...this.getMiddleWares()), sentryReduxEnhancer)
+      composeEnhancers(applyMiddleware(...this.getMiddleWares()))
     );
   };
 

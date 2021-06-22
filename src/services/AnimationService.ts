@@ -1,9 +1,7 @@
 import { ANIMATION_FORMATS, ANIMATION_KEYS, THEME_KEYS } from '../Constants';
-// eslint-disable-next-line camelcase
+/* eslint-disable camelcase */
 import Sample16_9 from '../resources/videos/sample-16_9.mp4';
-// eslint-disable-next-line camelcase
 import Sample1_1 from '../resources/videos/sample-1_1.mp4';
-// eslint-disable-next-line camelcase
 import Sample9_16 from '../resources/videos/sample-9_16.mp4';
 import { AnimationPosition, AnimationPositionStyle, Size } from '../types/AnimationType';
 
@@ -18,7 +16,7 @@ class AnimationService {
     const animationSize = AnimationService.getAnimationSizeFromLottieFile(lottieObject);
 
     if (playerInitialSize.height <= 0 || playerInitialSize.width <= 0) {
-      return;
+      return undefined;
     }
 
     const projectReferenceWidth = AnimationService.getReferenceWidthByFormat(animationFormat);
@@ -27,7 +25,6 @@ class AnimationService {
     const resizedAnimationHeight = (playerInitialSize.height * animationSize.height) / projectReferenceHeight;
     const resizedAnimationWidth = (playerInitialSize.width * animationSize.width) / projectReferenceWidth;
 
-    // eslint-disable-next-line consistent-return
     return {
       width: resizedAnimationWidth,
       height: resizedAnimationHeight,
@@ -190,14 +187,11 @@ class AnimationService {
   static getSampleVideoByFormat = (format: string): string => {
     switch (format) {
       case ANIMATION_FORMATS.FORMAT_9_16:
-        // eslint-disable-next-line camelcase
         return Sample9_16;
       case ANIMATION_FORMATS.FORMAT_1_1:
-        // eslint-disable-next-line camelcase
         return Sample1_1;
       case ANIMATION_FORMATS.FORMAT_16_9:
       default:
-        // eslint-disable-next-line camelcase
         return Sample16_9;
     }
   };

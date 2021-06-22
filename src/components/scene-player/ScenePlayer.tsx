@@ -4,7 +4,6 @@ import { AnimationPosition } from '../../types/AnimationType';
 import SceneVideoPlayer from './components/SceneVideoPlayer';
 
 type Props = {
-  animation: string;
   lottieAnimation: string;
   format: string;
   animationPosition: AnimationPosition;
@@ -31,7 +30,6 @@ const useStyles = createUseStyles({
 });
 
 const ScenePlayer: FunctionComponent<Props> = ({
-  animation,
   lottieAnimation,
   format,
   animationPosition,

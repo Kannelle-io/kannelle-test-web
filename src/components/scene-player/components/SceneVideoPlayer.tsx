@@ -3,12 +3,12 @@ import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { BsPauseFill, BsPlayFill } from 'react-icons/all';
 import { createUseStyles } from 'react-jss';
 import ReactPlayer from 'react-player';
-import RuleOfThirdsGrid from '../../../core/rule/RuleOfThirdsGrid';
 import useWindowSize from '../../../hooks/useWindowSize';
 import AnimationService from '../../../services/AnimationService';
 import { AnimationPosition, AnimationPositionStyle, Size } from '../../../types/AnimationType';
 import TimeUtils from '../../../utils/TimeUtils';
-import LottiePlayer from '../../lottiePlayer/LottiePlayer';
+import LottiePlayer from '../../lottie-player/LottiePlayer';
+import RuleOfThirdsGrid from '../../rule-of-thirds-grid/RuleOfThirdsGrid';
 
 type Props = {
   isSlide: boolean;

@@ -33,7 +33,6 @@ interface Auth0ContextOptions {
 interface Auth0ProviderOptions {
   children: React.ReactElement;
   onRedirectCallback?: (result: RedirectLoginResult) => void;
-  callbackInitLoggingTools: (user: any, newAuthentication: boolean) => void;
 }
 
 const DEFAULT_REDIRECT_CALLBACK = (): void => window.history.replaceState({}, document.title, window.location.pathname);
@@ -46,7 +45,6 @@ type Props = Auth0ProviderOptions & Auth0ClientOptions;
 const Auth0Provider: FunctionComponent<Props> = ({
   children,
   onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
-  callbackInitLoggingTools,
   ...initOptions
 }: Props) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -59,10 +57,8 @@ const Auth0Provider: FunctionComponent<Props> = ({
     const initAuth0 = async (): Promise<void> => {
       const auth0FromHook = await createAuth0Client(initOptions);
       setAuth0Client(auth0FromHook);
-      let newAuthentication = false;
       if (window.location.search.includes('code=')) {
         const { appState } = await auth0FromHook.handleRedirectCallback();
-        newAuthentication = true;
         onRedirectCallback(appState);
       }
       const authenticated = await auth0FromHook.isAuthenticated();
@@ -74,7 +70,6 @@ const Auth0Provider: FunctionComponent<Props> = ({
         setUser(auth0User);
         const token = await auth0FromHook.getTokenSilently();
         APIManager.setAccessToken(token);
-        callbackInitLoggingTools(auth0User, newAuthentication);
       }
 
       setLoading(false);

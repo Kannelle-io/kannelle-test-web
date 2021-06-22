@@ -4,9 +4,10 @@
  * API MODELS
  *
  */
-import { Area } from 'react-easy-crop/types';
 import { Font } from './FontFamiliesServiceTypes';
 import { APIModelUserEnriched } from './UsersServiceTypes';
+
+type Area = { width: number; height: number; x: number; y: number };
 
 export type APIModelCharter = {
   createdAt: string;

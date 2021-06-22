@@ -1,15 +1,17 @@
 import { Checkbox, Form, Select } from 'antd';
 import 'antd/dist/antd.css';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createUseStyles } from 'react-jss';
-import { ReactReduxContext } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ANIMATION_FORMATS, ANIMATION_KEYS, TEXT_LENGTHS, THEME_KEYS } from '../../Constants';
 import Company from '../../model/Company';
-import { APIModelCharter } from '../../services/api/types/ChartersServiceTypes';
-import { APIModelCompany } from '../../services/api/types/CompaniesServiceTypes';
-import FontsLoader from '../fontsLoader/FontsLoader';
-import ScenePlayerCard from '../scenePlayer/components/ScenePlayerCard';
+import { RootState } from '../../redux/RootState';
+import ChartersUtils from '../../utils/ChartersUtils';
+import CompaniesUtils from '../../utils/CompaniesUtils';
+import FontsLoader from '../fonts-loader/FontsLoader';
+import Preformatted from '../preformatted/Preformatted';
+import ScenePlayerCard from '../scene-player/components/ScenePlayerCard';
 
 const { Option } = Select;
 
@@ -39,28 +41,40 @@ const useStyles = createUseStyles({
   formActions: {
     textAlign: 'left',
   },
+  companyName: {
+    marginRight: 10,
+    background: '#1990FF',
+    color: 'white',
+  },
 });
 
-export const LottieAnimation = () => {
-  const { store } = useContext(ReactReduxContext);
-  const initToken = store.getState().app.apiToken;
-  const [token] = useState<string>(initToken);
+const AnimationsList = () => {
+  const token = useSelector((state: RootState) => state.app.apiToken);
+  const companies = useSelector((state: RootState) => state.companies.list);
+  const charters = useSelector((state: RootState) => state.charters.list);
+
   const [selectedTheme, setSelectedTheme] = useState<string>(THEME_KEYS.ALGIERS);
-  const [allCompanies, setAllCompanies] = useState<APIModelCompany[]>([]);
-  const [selectedCharter, setSelectedCharter] = useState<string>('');
+  const [selectedCharterId, setSelectedCharterId] = useState<number>();
   const [selectedFormat, setSelectedFormat] = useState<string>(ANIMATION_FORMATS.FORMAT_16_9);
   const [selectedTextLength, setSelectedTextLength] = useState<string>(TEXT_LENGTHS.MEDIUM);
   const [showGrid, setShowGrid] = useState(true);
 
   const classes = useStyles();
 
+  useEffect(() => {
+    if (!(charters && charters.length > 0)) {
+      return;
+    }
+    setSelectedCharterId(charters[0].id);
+  }, [charters]);
+
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
   };
 
-  const onCharterChange = (value: string) => {
-    setSelectedCharter(value);
+  const onCharterChange = (value: number) => {
+    setSelectedCharterId(value);
   };
 
   const onThemeChange = (value: string) => {
@@ -79,50 +93,33 @@ export const LottieAnimation = () => {
     setShowGrid(e.target.checked);
   };
 
-  const getAllChartersId = () => {
-    const chartersList = store
-      .getState()
-      ?.companies.list.map((company: Company) => company.charters.map((charters: APIModelCharter) => charters.id));
-    return chartersList.reduce((prev: APIModelCharter[], next: APIModelCharter) => {
-      return prev.concat(next);
-    });
-  };
-
-  const getAllCompanies = () => {
-    const companiesList = store.getState()?.companies.list.map((company: Company) => company.charters);
-    return companiesList.reduce((prev: APIModelCompany[], next: APIModelCompany) => {
-      return prev.concat(next);
-    });
-  };
-
-  const getCharterByName = (id: string) => {
-    const index = allCompanies.findIndex((x) => x.id === Number(id));
-    return allCompanies[index]?.name;
-  };
+  if (!(companies && charters && companies.length > 0 && charters.length > 0 && selectedCharterId)) {
+    return null;
+  }
 
   const initialValues = {
-    token: initToken,
-    charterId: getAllCompanies()[0].name,
+    charterId: charters[0].id,
     theme: THEME_KEYS.ALGIERS,
     format: ANIMATION_FORMATS.FORMAT_16_9,
     textLength: TEXT_LENGTHS.MEDIUM,
   };
 
-  useEffect(() => {
-    setSelectedCharter(getAllCompanies()[0].id);
-    setAllCompanies(getAllCompanies());
-  }, [store]);
-
   const renderForm = () => {
     return (
       <Form {...layout} name="basic" className={classes.form} initialValues={initialValues}>
-        <Form.Item label="CharterId" name="charterId">
-          <Select onChange={onCharterChange} value={selectedCharter}>
-            {getAllChartersId().map((charterKey: string) => (
-              <Option key={charterKey} value={charterKey}>
-                {getCharterByName(charterKey)}
-              </Option>
-            ))}
+        <Form.Item label="Charter" name="charterId">
+          <Select onChange={onCharterChange} value={selectedCharterId}>
+            {companies
+              ?.slice()
+              .sort(CompaniesUtils.sortCompaniesByName)
+              .map((company: Company) => {
+                const companyCharters = company.charters.slice().sort(ChartersUtils.sortChartersByName);
+                return companyCharters.map((charter) => (
+                  <Option key={charter.id} value={charter.id}>
+                    <Preformatted className={classes.companyName}>{company.name}</Preformatted> {charter.name}
+                  </Option>
+                ));
+              })}
           </Select>
         </Form.Item>
 
@@ -165,13 +162,13 @@ export const LottieAnimation = () => {
 
   return (
     <div className="App">
-      <FontsLoader charterId={Number(selectedCharter)} token={token} />
+      <FontsLoader charterId={selectedCharterId} token={token} />
       {renderForm()}
       <div className={classes.animationsContainer}>
         {Object.values(ANIMATION_KEYS).map((animationKey: string) => {
           return (
             <ScenePlayerCard
-              charterId={Number(selectedCharter)}
+              charterId={selectedCharterId}
               token={token}
               theme={selectedTheme}
               animation={animationKey}
@@ -187,4 +184,4 @@ export const LottieAnimation = () => {
   );
 };
 
-export default LottieAnimation;
+export default AnimationsList;
