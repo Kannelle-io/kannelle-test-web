@@ -1,0 +1,59 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["react", "prettier", "flowtype", "@typescript-eslint", "eslint-plugin-import"],
+  "extends": [
+    "airbnb",
+    "prettier", // Turns off all rules that are unnecessary or might conflict with Prettier,
+    "plugin:prettier/recommended", // Runs Prettier as an ESLint rule and reports differences as individual ESLint issues
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true,
+    "es6": true
+  },
+  "globals": {
+    "document": false
+  },
+  "rules": {
+    "no-console": 0,
+    "no-debugger": "off",
+    "no-shadow": "off",
+    "no-use-before-define": "off",
+    "import/prefer-default-export": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "mjs": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "no-plusplus": "off",
+    "lines-between-class-members": "off",
+    "no-underscore-dangle": "off",
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsForRegex": ["^draft"] }]
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", ".*.ts", ".*.tsx"]
+    }
+  ]
+}

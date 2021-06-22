@@ -1,16 +1,14 @@
+import { CodeOutlined, CopyOutlined } from '@ant-design/icons';
 import { Alert, Button, Card, message, Modal, Skeleton } from 'antd';
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
-import { createUseStyles } from 'react-jss';
-import { ANIMATION_FORMATS, apiUrl } from './Constants';
-import LottiePlayer from './LottiePlayer';
-import AnimationService from './utils/AnimationService';
-import TextService from './utils/TextService';
-import { CodeOutlined, CopyOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import ScenePlayer from './ScenePlayer';
-import SceneVideoPlayer from './SceneVideoPlayer';
-import type { AnimationPosition } from './types/AnimationType';
+import { createUseStyles } from 'react-jss';
+import { apiUrl } from '../../../Constants';
+import AnimationService from '../../../services/AnimationService';
+import type { AnimationPosition } from '../../../types/AnimationType';
+import TextService from '../../../utils/TextService';
+import ScenePlayer from '../ScenePlayer';
 
 type Props = {
   charterId: number;
@@ -110,7 +108,7 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
       animationName: animation,
       theme,
       format,
-      animationTexts: animationTexts,
+      animationTexts,
       position,
       duration: !isSlide ? 9 : undefined, // For the demo, use the video sample duration
     };
@@ -131,7 +129,7 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
         setLottieJson(response.data);
       })
       .catch((e) => {
-        const status = e.response.status;
+        const { status } = e.response;
         // Expired token
         if (status === 401) {
           const errorMsg = `Error: the token might be expired`;
@@ -204,7 +202,7 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
   const renderOpenLottieModalButton = () => {
     return (
       <Button
-        type={'primary'}
+        type="primary"
         danger={!!error}
         onClick={onOpenModal}
         icon={<CodeOutlined />}

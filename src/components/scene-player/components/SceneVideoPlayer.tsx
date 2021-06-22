@@ -1,14 +1,14 @@
+import { Slider } from 'antd';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { BsPauseFill, BsPlayFill } from 'react-icons/all';
 import { createUseStyles } from 'react-jss';
 import ReactPlayer from 'react-player';
-import useWindowSize from './hooks/useWindowSize';
-import LottiePlayer from './LottiePlayer';
-import { AnimationPosition, AnimationPositionStyle, Size } from './types/AnimationType';
-import AnimationService from './utils/AnimationService';
-import TimeUtils from './utils/TimeUtils';
-import RuleOfThirdsGrid from './RuleOfThirdsGrid';
-import { Button, Slider } from 'antd';
-import { BsPauseFill, BsPlayFill, FaExpand } from 'react-icons/all';
+import useWindowSize from '../../../hooks/useWindowSize';
+import AnimationService from '../../../services/AnimationService';
+import { AnimationPosition, AnimationPositionStyle, Size } from '../../../types/AnimationType';
+import TimeUtils from '../../../utils/TimeUtils';
+import LottiePlayer from '../../lottie-player/LottiePlayer';
+import RuleOfThirdsGrid from '../../rule-of-thirds-grid/RuleOfThirdsGrid';
 
 type Props = {
   isSlide: boolean;

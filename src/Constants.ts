@@ -50,3 +50,66 @@ export enum TEXT_LENGTHS {
   MEDIUM = 'MEDIUM',
   LARGE = 'LARGE',
 }
+
+export enum NODE_ENV {
+  DEVELOPMENT = 'development',
+}
+
+export const THEME = {
+  MENU: {
+    MAIN_TEXT_COLOR: '#003E6B',
+    MAIN_BACKGROUND_COLOR: '#DCEEFB',
+    DEFAULT_TEXT_COLOR: '#222222',
+    DEFAULT_ICON_COLOR: '#7E7E7E',
+    FONT_SIZE_TEXT: 14,
+    FONT_SIZE_ICON: 18,
+  },
+  DEFAULT: {
+    MAIN_COLOR: '#3371FF',
+  },
+  CHARTERS: {
+    ROLES: {
+      KnlTeam: {
+        TEXT_COLOR: '#0E5814',
+        BACKGROUND_COLOR: '#E3F9E5',
+      },
+      Admin: {
+        TEXT_COLOR: '#7C5E10',
+        BACKGROUND_COLOR: '#FCEFC7',
+      },
+      Owner: {
+        TEXT_COLOR: '#0B4F71',
+        BACKGROUND_COLOR: '#D1EEFC',
+      },
+      Creator: {
+        TEXT_COLOR: '#000000A6',
+        BACKGROUND_COLOR: '#EFEDED',
+      },
+    },
+    USERS: {
+      INACTIVE: {
+        TEXT_COLOR: '#610316',
+        BACKGROUND_COLOR: '#FFE3E3',
+      },
+    },
+  },
+};
+
+export const AXIOS_PARAMS = {
+  TIMEOUT_IN_MS: 15000,
+};
+
+export type RouteLink = { key: string; path: string; title: string };
+
+export const LINK: Record<string, RouteLink> = {
+  HOME: {
+    key: '/home',
+    path: '/home',
+    title: 'menu.home',
+  },
+  UNAUTHORIZED: {
+    key: '/unauthorizer',
+    path: '/unauthorizer',
+    title: 'menu.unauthorizer',
+  },
+};

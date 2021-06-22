@@ -1,8 +1,9 @@
-import { AnimationPosition, AnimationPositionStyle, Size } from './../types/AnimationType';
-import { ANIMATION_FORMATS, ANIMATION_KEYS, THEME_KEYS } from './../Constants';
+import { ANIMATION_FORMATS, ANIMATION_KEYS, THEME_KEYS } from '../Constants';
+/* eslint-disable camelcase */
 import Sample16_9 from '../resources/videos/sample-16_9.mp4';
-import Sample9_16 from '../resources/videos/sample-9_16.mp4';
 import Sample1_1 from '../resources/videos/sample-1_1.mp4';
+import Sample9_16 from '../resources/videos/sample-9_16.mp4';
+import { AnimationPosition, AnimationPositionStyle, Size } from '../types/AnimationType';
 
 class AnimationService {
   // Compute the size of the animation player depending on the animation format,
@@ -15,7 +16,7 @@ class AnimationService {
     const animationSize = AnimationService.getAnimationSizeFromLottieFile(lottieObject);
 
     if (playerInitialSize.height <= 0 || playerInitialSize.width <= 0) {
-      return;
+      return undefined;
     }
 
     const projectReferenceWidth = AnimationService.getReferenceWidthByFormat(animationFormat);

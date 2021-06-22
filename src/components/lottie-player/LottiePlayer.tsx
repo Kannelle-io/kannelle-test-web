@@ -4,6 +4,8 @@ import isEqual from 'lodash/isEqual';
 import lottie, { AnimationConfig } from 'lottie-web';
 import React, { FunctionComponent, memo, useEffect, useRef, useState } from 'react';
 
+/* eslint-disable @typescript-eslint/no-empty-function */
+
 type Props = {
   animationData?: any;
   path?: string;
@@ -106,7 +108,9 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [loop, renderer, rendererSettings, animationData, path]); // audioFactory]);
 
     useEffect(() => {
-      if (!animRef.current) return;
+      if (!animRef.current) {
+        return undefined;
+      }
 
       animRef.current.addEventListener('complete', onComplete);
       return () => {
@@ -115,7 +119,9 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [onComplete]);
 
     useEffect(() => {
-      if (!animRef.current) return;
+      if (!animRef.current) {
+        return undefined;
+      }
 
       animRef.current.addEventListener('loopComplete', onLoopComplete);
       return () => {
@@ -124,7 +130,9 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [onLoopComplete]);
 
     useEffect(() => {
-      if (!animRef.current) return;
+      if (!animRef.current) {
+        return undefined;
+      }
 
       animRef.current.addEventListener('enterFrame', onEnterFrame);
       return () => {
@@ -133,7 +141,9 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [onEnterFrame]);
 
     useEffect(() => {
-      if (!animRef.current) return;
+      if (!animRef.current) {
+        return undefined;
+      }
 
       animRef.current.addEventListener('segmentStart', onSegmentStart);
       return () => {
@@ -147,12 +157,14 @@ const LottiePlayer: FunctionComponent<Props> = memo(
     }, [ready, onDurationChange]);
 
     useEffect(() => {
-      if (!(ready && animRef.current)) return;
+      if (!(ready && animRef.current)) {
+        return undefined;
+      }
 
       const updateCurrentTime = () => {
         const duration = animRef.current.getDuration();
-        const currentFrame = animRef.current.currentFrame;
-        const totalFrames = animRef.current.totalFrames;
+        const { currentFrame } = animRef.current;
+        const { totalFrames } = animRef.current;
         onCurrentTimeChange((currentFrame * duration) / totalFrames);
       };
 

@@ -1,0 +1,6 @@
+{
+  "presets": ["babel-preset-react-app"],
+  "plugins": [
+    ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": true }] // `style: true` for less
+  ]
+}

@@ -1,8 +1,7 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { createUseStyles } from 'react-jss';
-import SceneVideoPlayer from './SceneVideoPlayer';
-import { AnimationPosition } from './types/AnimationType';
-import AnimationService from './utils/AnimationService';
+import { AnimationPosition } from '../../types/AnimationType';
+import SceneVideoPlayer from './components/SceneVideoPlayer';
 
 type Props = {
   lottieAnimation: string;
