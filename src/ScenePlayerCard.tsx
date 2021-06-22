@@ -226,7 +226,6 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
 
           {lottieJson && !error && !isLoading && (
             <ScenePlayer
-              animation={animation}
               lottieAnimation={lottieJson}
               format={format}
               animationPosition={position}
