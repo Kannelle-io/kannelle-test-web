@@ -18,6 +18,7 @@ type Props = {
   format: string;
   textLength: string;
   showGrid: boolean;
+  useOriginalSettings: boolean;
 };
 
 const useStyles = createUseStyles({
@@ -58,7 +59,16 @@ const useStyles = createUseStyles({
   },
 });
 
-const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLength, showGrid }: Props) => {
+const ScenePlayerCard = ({
+  charterId,
+  token,
+  theme,
+  animation,
+  format,
+  textLength,
+  showGrid,
+  useOriginalSettings,
+}: Props) => {
   const [lottieJson, setLottieJson] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -110,6 +120,7 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
       format,
       animationTexts,
       position,
+      useOriginalSettings,
       duration: !isSlide ? 9 : undefined, // For the demo, use the video sample duration
     };
 
@@ -147,7 +158,7 @@ const ScenePlayerCard = ({ charterId, token, theme, animation, format, textLengt
         console.error(`Error with the following params:`, params, e);
       })
       .finally(() => setIsLoading(false));
-  }, [charterId, token, theme, animation, format, animationTexts, position, isSlide]);
+  }, [charterId, token, theme, animation, format, animationTexts, position, isSlide, useOriginalSettings]);
 
   const onOpenModal = () => {
     setIsModalVisible(true);

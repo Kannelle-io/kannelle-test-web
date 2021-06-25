@@ -57,7 +57,8 @@ const AnimationsList = () => {
   const [selectedCharterId, setSelectedCharterId] = useState<number>();
   const [selectedFormat, setSelectedFormat] = useState<string>(ANIMATION_FORMATS.FORMAT_16_9);
   const [selectedTextLength, setSelectedTextLength] = useState<string>(TEXT_LENGTHS.MEDIUM);
-  const [showGrid, setShowGrid] = useState(true);
+  const [showGrid, setShowGrid] = useState(false);
+  const [useOriginalSettings, setUseOriginalSettings] = useState(false);
 
   const classes = useStyles();
 
@@ -69,8 +70,8 @@ const AnimationsList = () => {
   }, [charters]);
 
   const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 10 },
+    wrapperCol: { span: 14 },
   };
 
   const onCharterChange = (value: number) => {
@@ -91,6 +92,10 @@ const AnimationsList = () => {
 
   const onShowGridChange = (e: CheckboxChangeEvent) => {
     setShowGrid(e.target.checked);
+  };
+
+  const onUseOriginalSettingsChange = (e: CheckboxChangeEvent) => {
+    setUseOriginalSettings(e.target.checked);
   };
 
   if (!(companies && charters && companies.length > 0 && charters.length > 0 && selectedCharterId)) {
@@ -156,6 +161,10 @@ const AnimationsList = () => {
         <Form.Item label="Rule of third grid" name="showGrid">
           <Checkbox onChange={onShowGridChange} checked={showGrid} />
         </Form.Item>
+
+        <Form.Item label="Use original settings (colors/fonts)" name="useOriginalSettings">
+          <Checkbox onChange={onUseOriginalSettingsChange} checked={useOriginalSettings} />
+        </Form.Item>
       </Form>
     );
   };
@@ -175,6 +184,7 @@ const AnimationsList = () => {
               format={selectedFormat}
               textLength={selectedTextLength}
               showGrid={showGrid}
+              useOriginalSettings={useOriginalSettings}
               key={animationKey}
             />
           );
