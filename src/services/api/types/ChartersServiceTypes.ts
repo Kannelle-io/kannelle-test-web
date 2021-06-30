@@ -97,6 +97,26 @@ export type APIUpdateCharterPermissionsResult = {
   value?: string;
 };
 
+export type MediaType = 'image' | 'video';
+
+export type MediaFile = {
+  createdAt: string;
+  id: number;
+  isActive: boolean;
+  updatedAt: string;
+  url: string;
+  publicName?: string;
+  operationId: string;
+  status: string;
+  mediaType: MediaType;
+  croppedArea?: MediaCroppedArea;
+  height?: number;
+  width?: number;
+  duration?: number;
+  thumbnailImage?: MediaFile;
+  croppedFileUrl?: string;
+};
+
 export type MediaCroppedArea = Area;
 
 export type APIUpdateCharterScenarioMetadataParams = {
@@ -138,4 +158,18 @@ export type APIGetCharterPermissionsResponse = {
 
 export type APIUpdateCharterPermissionResponse = {
   data: APIUpdateCharterPermissionsResult;
+};
+
+export type APIFetchAnimationByCharterIdParams = {
+  animationName: string;
+  theme: string;
+  format: string;
+  animationTexts?: string[];
+  duration?: number;
+  position: {
+    code: string;
+    x?: number;
+    y?: number;
+  };
+  useOriginalSettings?: boolean;
 };

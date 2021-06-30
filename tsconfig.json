@@ -1,14 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "downlevelIteration": true,
-    "lib": [
-      "dom",
-      "es5",
-      "es6",
-      "es7",
-      "dom.iterable"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -26,7 +19,5 @@
     "sourceRoot": "/",
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

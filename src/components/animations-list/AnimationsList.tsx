@@ -1,12 +1,14 @@
 import { Checkbox, Form, Select } from 'antd';
 import 'antd/dist/antd.css';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createUseStyles } from 'react-jss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ANIMATION_FORMATS, ANIMATION_KEYS, TEXT_LENGTHS, THEME_KEYS } from '../../Constants';
 import Company from '../../model/Company';
+import { selectCharter } from '../../redux/action/ChartersAction';
 import { RootState } from '../../redux/RootState';
+import { APIModelCharter } from '../../services/api/types/ChartersServiceTypes';
 import ChartersUtils from '../../utils/ChartersUtils';
 import CompaniesUtils from '../../utils/CompaniesUtils';
 import FontsLoader from '../fonts-loader/FontsLoader';
@@ -53,6 +55,14 @@ const AnimationsList = () => {
   const companies = useSelector((state: RootState) => state.companies.list);
   const charters = useSelector((state: RootState) => state.charters.list);
 
+  const allCharters = useMemo(() => {
+    let res: APIModelCharter[] = [];
+    companies?.forEach((c: Company) => {
+      res = res.concat(c.charters);
+    });
+    return res;
+  }, [companies]);
+
   const [selectedTheme, setSelectedTheme] = useState<string>(THEME_KEYS.ALGIERS);
   const [selectedCharterId, setSelectedCharterId] = useState<number>();
   const [selectedFormat, setSelectedFormat] = useState<string>(ANIMATION_FORMATS.FORMAT_16_9);
@@ -61,6 +71,7 @@ const AnimationsList = () => {
   const [useOriginalSettings, setUseOriginalSettings] = useState(false);
 
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!(charters && charters.length > 0)) {
@@ -73,6 +84,15 @@ const AnimationsList = () => {
     labelCol: { span: 10 },
     wrapperCol: { span: 14 },
   };
+
+  useEffect(() => {
+    if (!(allCharters && selectedCharterId)) {
+      return;
+    }
+
+    const selectedCharter = allCharters?.filter((ch) => ch.id === selectedCharterId)[0];
+    dispatch(selectCharter(selectedCharter));
+  }, [allCharters, selectedCharterId]);
 
   const onCharterChange = (value: number) => {
     setSelectedCharterId(value);
@@ -177,8 +197,6 @@ const AnimationsList = () => {
         {Object.values(ANIMATION_KEYS).map((animationKey: string) => {
           return (
             <ScenePlayerCard
-              charterId={selectedCharterId}
-              token={token}
               theme={selectedTheme}
               animation={animationKey}
               format={selectedFormat}

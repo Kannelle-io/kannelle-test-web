@@ -1,5 +1,6 @@
 // Adaptation of `react-lottie-player` (from v1.3.1)
 
+import { cloneDeep } from 'lodash';
 import isEqual from 'lodash/isEqual';
 import lottie, { AnimationConfig } from 'lottie-web';
 import React, { FunctionComponent, memo, useEffect, useRef, useState } from 'react';
@@ -81,7 +82,7 @@ const LottiePlayer: FunctionComponent<Props> = memo(
 
     useEffect(() => {
       animRef.current = lottie.loadAnimation({
-        animationData,
+        animationData: animationData != null ? cloneDeep(animationData) : null,
         path,
         container: animElementRef.current,
         renderer,

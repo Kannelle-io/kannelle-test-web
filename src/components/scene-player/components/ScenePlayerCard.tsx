@@ -1,18 +1,14 @@
 import { CodeOutlined, CopyOutlined } from '@ant-design/icons';
-import { Alert, Button, Card, message, Modal, Skeleton } from 'antd';
-import axios from 'axios';
+import { Alert, Button, Card, message, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { createUseStyles } from 'react-jss';
-import { apiUrl } from '../../../Constants';
 import AnimationService from '../../../services/AnimationService';
 import type { AnimationPosition } from '../../../types/AnimationType';
 import TextService from '../../../utils/TextService';
 import ScenePlayer from '../ScenePlayer';
 
 type Props = {
-  charterId: number;
-  token: string;
   theme: string;
   animation: string;
   format: string;
@@ -59,25 +55,17 @@ const useStyles = createUseStyles({
   },
 });
 
-const ScenePlayerCard = ({
-  charterId,
-  token,
-  theme,
-  animation,
-  format,
-  textLength,
-  showGrid,
-  useOriginalSettings,
-}: Props) => {
-  const [lottieJson, setLottieJson] = useState<string>();
-  const [isLoading, setIsLoading] = useState(false);
+const ScenePlayerCard = ({ theme, animation, format, textLength, showGrid, useOriginalSettings }: Props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [error, setError] = useState<string>();
   const [animationTexts, setAnimationTexts] = useState<string[]>();
   const [position, setPosition] = useState<AnimationPosition>({
     code: 'FULLSCREEN',
   });
   const [isSlide, setIsSlide] = useState(false);
+  // For the Knl-test
+  const [lottieJson, setLottieJson] = useState<any>();
+  const [isLottieJsonLoading, setIsLottieJsonLoading] = useState<boolean>(false);
+  const [lottieJsonError, setLottieJsonError] = useState<string>();
   // For the demo
   const [sampleVideo, setSampleVideo] = useState<string>();
 
@@ -108,58 +96,6 @@ const ScenePlayerCard = ({
     setSampleVideo(AnimationService.getSampleVideoByFormat(format));
   }, [isSlide, format]);
 
-  // Fetch the actual Lottie file depending on the animation params
-  useEffect(() => {
-    if (!(animation && theme && format && position && animationTexts && animationTexts.length > 0)) {
-      return;
-    }
-
-    const params = {
-      animationName: animation,
-      theme,
-      format,
-      animationTexts,
-      position,
-      useOriginalSettings,
-      duration: !isSlide ? 9 : undefined, // For the demo, use the video sample duration
-    };
-
-    setIsLoading(true);
-    setError(undefined);
-
-    axios
-      .post(`${apiUrl}/charters/${charterId}/animations`, params, {
-        timeout: 30000,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      })
-      .then((response) => {
-        setLottieJson(response.data);
-      })
-      .catch((e) => {
-        const { status } = e.response;
-        // Expired token
-        if (status === 401) {
-          const errorMsg = `Error: the token might be expired`;
-          setError(errorMsg);
-          console.error(errorMsg, e);
-          return;
-        }
-
-        // General error case
-        const errorMsg = `Error with the following params: ${JSON.stringify(params, null, 2)}
-        
-          Error: ${e.message}
-        `;
-        setError(errorMsg);
-        console.error(`Error with the following params:`, params, e);
-      })
-      .finally(() => setIsLoading(false));
-  }, [charterId, token, theme, animation, format, animationTexts, position, isSlide, useOriginalSettings]);
-
   const onOpenModal = () => {
     setIsModalVisible(true);
   };
@@ -168,9 +104,29 @@ const ScenePlayerCard = ({
     setIsModalVisible(false);
   };
 
+  const onLottieJsonChange = (json: any) => {
+    setLottieJson(json);
+  };
+
+  const onLottieLoadingChange = (isLoading: boolean) => {
+    setIsLottieJsonLoading(isLoading);
+  };
+
+  const onLottieErrorChange = (err?: string) => {
+    setLottieJsonError(err);
+  };
+
   // Error panel
   const renderError = () => {
-    return <Alert message="Error" description={error} type="error" showIcon className={classes.error} />;
+    return (
+      <Alert
+        message="Error"
+        description={<pre>{lottieJsonError}</pre>}
+        type="error"
+        showIcon
+        className={classes.error}
+      />
+    );
   };
 
   // Modal to display the Lottie JSON code and copy it to clipboard
@@ -214,12 +170,12 @@ const ScenePlayerCard = ({
     return (
       <Button
         type="primary"
-        danger={!!error}
-        onClick={onOpenModal}
+        danger={lottieJsonError !== undefined}
+        onClick={!lottieJsonError ? onOpenModal : undefined}
         icon={<CodeOutlined />}
         className={classes.lottieAnimationButton}
-        loading={isLoading}
-        disabled={isLoading}
+        loading={isLottieJsonLoading && !lottieJsonError}
+        disabled={isLottieJsonLoading && !lottieJsonError}
       >
         Lottie code
       </Button>
@@ -230,17 +186,21 @@ const ScenePlayerCard = ({
     <>
       <div className={classes.animationContainer}>
         <Card title={renderAnimationCardTitle()} extra={renderOpenLottieModalButton()}>
-          {isLoading && <Skeleton active />}
-          {error && !isLoading && renderError()}
+          {lottieJsonError && renderError()}
 
-          {lottieJson && !error && !isLoading && (
+          {!lottieJsonError && (
             <ScenePlayer
-              lottieAnimation={lottieJson}
-              format={format}
+              animationTheme={theme}
+              animationName={animation}
+              animationTexts={animationTexts ?? []}
               animationPosition={position}
-              isSlide={isSlide}
-              videoUrl={sampleVideo}
+              format={format}
               showGrid={showGrid}
+              videoUrl={!isSlide ? sampleVideo : undefined}
+              useOriginalSettings={useOriginalSettings}
+              onLottieJsonChange={onLottieJsonChange}
+              onLottieLoadingChange={onLottieLoadingChange}
+              onLottieErrorChange={onLottieErrorChange}
             />
           )}
         </Card>

@@ -22,7 +22,7 @@
     "less-loader": "^5.0.0",
     "lodash": "4.17.21",
     "loglevel": "^1.6.8",
-    "lottie-web": "5.7.8",
+    "lottie-web": "^5.7.8",
     "moment": "^2.29.1",
     "natural-compare": "^1.4.0",
     "react": "17.0.2",

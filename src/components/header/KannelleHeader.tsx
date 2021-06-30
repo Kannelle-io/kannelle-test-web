@@ -13,7 +13,7 @@ const useStyles = createUseStyles({
     boxShadow: '-3px 3px 3px #ecebeb',
     position: 'fixed',
     top: 0,
-    zIndex: 3,
+    zIndex: 4,
     width: '100%',
   },
 

@@ -3,7 +3,8 @@ import { ANIMATION_FORMATS, ANIMATION_KEYS, THEME_KEYS } from '../Constants';
 import Sample16_9 from '../resources/videos/sample-16_9.mp4';
 import Sample1_1 from '../resources/videos/sample-1_1.mp4';
 import Sample9_16 from '../resources/videos/sample-9_16.mp4';
-import { AnimationPosition, AnimationPositionStyle, Size } from '../types/AnimationType';
+import VideoEmpty from '../resources/videos/video_empty_10.mp4';
+import { AnimationPosition, AnimationPositionStyle, PIP, PipEffects, Size } from '../types/AnimationType';
 
 class AnimationService {
   // Compute the size of the animation player depending on the animation format,
@@ -147,6 +148,47 @@ class AnimationService {
   // the scene total duration
   static getScenePercentage = (playedSeconds: number, sceneDuration: number) => {
     return playedSeconds / sceneDuration;
+  };
+
+  // Check if the videoUrl passed as param is the VideoEmpty
+  static isVideoEmpty = (videoUrl: string) => {
+    return videoUrl === VideoEmpty;
+  };
+
+  // Compute the style to apply to the PIP image depending on the effect name and value
+  static computeImagePipEffectStyle = (currentTime: number, pip: PIP, playerSize: Size) => {
+    if (!(pip.source && pip.duration && pip.effect?.name && pip.effect.value)) {
+      return undefined;
+    }
+
+    const progress = currentTime / pip.duration;
+    const effectName = pip.effect.name;
+    const effectValue = pip.effect.value;
+
+    switch (effectName) {
+      case PipEffects.ZOOMIN.code: {
+        const scale = 1 + (effectValue - 1) * progress;
+        return { transform: `scale(${scale})` };
+      }
+      case PipEffects.ZOOMOUT.code: {
+        const scale = 1 + (effectValue - 1) * (1 - progress);
+        return { transform: `scale(${scale})` };
+      }
+      case PipEffects.TRANSLATION_RIGHT.code: {
+        const scale = 1 + effectValue;
+        const translationX = -(playerSize.width * effectValue * (1 - 2 * progress)) / 2;
+        const translationY = 0;
+        return { transform: `scale(${scale}) translate(${translationX}px, ${translationY}px)` };
+      }
+      case PipEffects.TRANSLATION_LEFT.code: {
+        const scale = 1 + effectValue;
+        const translationX = (playerSize.width * effectValue * (1 - 2 * progress)) / 2;
+        const translationY = 0;
+        return { transform: `scale(${scale}) translate(${translationX}px, ${translationY}px)` };
+      }
+      default:
+        return undefined;
+    }
   };
 
   /**

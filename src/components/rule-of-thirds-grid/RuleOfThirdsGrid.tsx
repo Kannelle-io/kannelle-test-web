@@ -11,11 +11,11 @@ const useStyles = createUseStyles({
     position: 'absolute',
     '& > div:not(:nth-child(3n))': {
       borderRight: '1px solid #D0D0D0',
-      zIndex: 1,
+      zIndex: 3,
     },
     '& > div:not(:nth-child(7)):not(:nth-child(8)):not(:nth-child(9))': {
       borderBottom: '1px solid #D0D0D0',
-      zIndex: 1,
+      zIndex: 3,
     },
   },
 });
